@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->comment('角色名称')->unique();
             $table->string('code', 30)->comment('角色编码')->unique();
-            $table->string('description', 100)->comment('角色描述');
+            $table->string('description', 100)->nullable()->comment('角色描述');
             $table->softDeletes();
             $table->timestamps();
         });

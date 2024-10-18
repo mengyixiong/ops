@@ -4,5 +4,5 @@ namespace App\Models;
 
 class SystemCompany extends BaseModel
 {
-    public static string $name = '主体';
+    public string $name = '主体';
 }

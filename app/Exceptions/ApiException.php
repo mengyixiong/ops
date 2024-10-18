@@ -20,18 +20,4 @@ class ApiException extends Exception
     {
         parent::__construct($message, $code);
     }
-
-    /**
-     * 渲染异常为HTTP响应。
-     */
-    public function render(Request $request)
-    {
-        // 检查是否为API请求，返回JSON响应
-        if ($request->expectsJson()) {
-            return $this->error($this->getCode(),$this->getMessage());
-        }
-
-        // 其他情况返回默认视图
-        return parent::render($request);
-    }
 }

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('username', 20)->comment('管理员名称')->unique();
             $table->string('password', 100)->comment('管理员密码');
+            $table->bigInteger('com_id')->comment('当前主体ID');
             $table->string('avatar')->comment('管理员头像');
             $table->string('email', 50)->comment('管理员邮箱')->unique();
             $table->string('phone', 20)->nullable()->comment('管理员手机')->unique();

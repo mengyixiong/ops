@@ -62,9 +62,13 @@ class Handler extends ExceptionHandler
     {
         # 记录不存在异常
         if ($e instanceof ModelNotFoundException) {
-            $name = $e->getModel()::$name; # 获取模型的类名
+            $name = (new ($e->getModel()))->name; # 获取模型的类名
             $ids  = implode(', ', $e->getIds()); # 获取找不到的ID
             return $this->error(404, "{$name}为 [{$ids}] 的记录不存在");
+        }
+
+        if ($e instanceof ApiException){
+            return $this->error($e->getCode(), $e->getMessage());
         }
 
         return $this->error(500, $e->getMessage());

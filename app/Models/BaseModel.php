@@ -9,6 +9,9 @@ class BaseModel extends Model
 {
     use HasFactory;
 
+    # 模型默认名称
+    public string $name = 'record';
+
     # 模型默认忽略所有批量赋值字段
     protected $guarded = [];
 
