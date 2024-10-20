@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class SystemMenu extends BaseModel
 {
+
+    const TYPE_MENU = 1;
+    const TYPE_PERMISSION = 2;
+
     /**
      * 使用关联模型获取顶级分类
      */

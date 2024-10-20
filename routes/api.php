@@ -8,25 +8,42 @@ use App\Http\Controllers\System\AdminController;
 use Illuminate\Support\Facades\Route;
 
 # 授权相关路由
-Route::group(['prefix' => 'auth'], function () {
-    Route::post('/login', [AuthController::class, 'login']);
+Route::group([
+    'prefix' => 'auth',
+    'as' => 'auth.',
+], function () {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/refresh', [AuthController::class, 'refresh']);
-        Route::post('/logout', [AuthController::class, 'logout']);
+    Route::middleware(['auth:sanctum','permission'])->group(function () {
+        Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [AuthController::class, 'me'])->name('me');
+        Route::get('/get_user_routes', [AuthController::class, 'getUserRoutes'])->name('get_user_routes');
+        Route::get('/is_route_exist', [AuthController::class, 'isRouteExist'])->name('is_route_exist');
+        Route::post('/change_company', [AuthController::class, 'changeCompany'])->name('change_company');
     });
 });
 
 
 # 需要认证的路由
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum','permission'])->group(function () {
 
     # 系统管理
-    Route::group(['prefix' => 'system'], function () {
+    Route::group([
+        'prefix' => 'system',
+        'as' => 'system.',
+    ], function () {
+        # 管理员
         Route::apiResource('/admin', AdminController::class);
+
+        # 主体
         Route::apiResource('/company', CompanyController::class);
+
+        # 角色
         Route::apiResource('/role', RoleController::class);
-        Route::post('/assign_permission/{role}', [RoleController::class, 'assignPermission']);
+        Route::post('/assign_permission/{role}', [RoleController::class, 'assignPermission'])->name('role.assign-permission');
+
+        # 菜单/权限
         Route::apiResource('/menu', MenuController::class);
     });
 });

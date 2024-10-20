@@ -13,6 +13,12 @@ class SystemAdmin extends Authenticatable
 
     public string $name = '管理员';
 
+    # 将 created_at 和 updated_at 转换为指定的日期格式
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
+    ];
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -26,20 +32,5 @@ class SystemAdmin extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(SystemRole::class, 'system_admin_roles', 'admin_id', 'role_id');
-    }
-
-    /**
-     * 获取菜单
-     */
-    public function menus()
-    {
-        return $this->hasManyThrough(
-            SystemRole::class,
-            SystemMenu::class,
-            'project_id', // 在 environments 表上的外键...
-            'environment_id', // 在 deployments 表上的外键...
-            'id', // 在 projects 表上的本地键...
-            'id' // 在 environments 表格上的本地键...
-        );
     }
 }

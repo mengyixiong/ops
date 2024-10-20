@@ -22,11 +22,20 @@ class AdminController extends BaseController
     public function index(Request $request)
     {
         $data = SystemAdmin::query()
+            ->leftJoin('system_companies as b', 'system_admins.current_com_id', '=', 'b.id')
             # 用户名查询
             ->when(!empty($request->username), function ($query) use ($request) {
                 $query->where('username', 'like', '%' . $request->username . '%');
             })
+
+            # 启用查询
+            ->when(!empty($request->is_enable), function ($query) use ($request) {
+                $query->where('is_enable', $request->is_enable);
+            })
+            ->orderBy('created_at', 'desc')
+            ->select(['system_admins.*', 'b.name as current_com_name'])
             ->paginate($request->get('limit', 15));
+
         return $this->succPage($data);
     }
 

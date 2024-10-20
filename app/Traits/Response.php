@@ -11,7 +11,7 @@ trait Response
         return response()->json(
             [
                 'code'    => 200,
-                'message' => $message,
+                'msg' => $message,
                 'data'    => $data
             ]
         );
@@ -42,7 +42,7 @@ trait Response
         return response()->json(
             [
                 'code'    => $code,
-                'message' => $message,
+                'msg' => $message,
                 'data'    => null,
             ]
         );
