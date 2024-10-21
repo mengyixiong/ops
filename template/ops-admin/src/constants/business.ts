@@ -31,4 +31,7 @@ export const YesOrNoRecord: Record<Api.SystemManage.UserGender, App.I18n.I18nKey
   N: 'common.yesOrNo.no'
 };
 
+export const YesOrNoOptions = transformRecordToOption(YesOrNoRecord);
+
+
 export const menuIconTypeOptions = transformRecordToOption(menuIconTypeRecord);

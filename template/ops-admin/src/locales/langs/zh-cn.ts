@@ -185,7 +185,25 @@ const local: App.I18n.Schema = {
         addSuccess: '新增用户成功',
         addFailed: '新增用户失败',
         editSuccess: '编辑用户成功',
-        editFailed: '编辑用户失败',
+        editFailed: '编辑用户失败'
+      },
+      company: {
+        name: '主体名称',
+        is_default: '默认',
+        abb: '主体简称',
+        title: '主体管理',
+        add: '新增主体',
+        edit: '编辑主体',
+        delete: '删除主体',
+        deleteSuccess: '删除主体成功',
+        confirmDelete: '确认删除主体吗？',
+        deleteConfirm: '删除主体后不可恢复，确认删除吗？',
+        deleteSuccess: '删除主体成功',
+        deleteFailed: '删除主体失败',
+        addSuccess: '新增主体成功',
+        addFailed: '新增主体失败',
+        editSuccess: '编辑主体成功',
+        editFailed: '编辑主体失败'
       },
       common:{
         status: {
