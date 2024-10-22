@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { fetchGetAllRoles } from '@/service/api';
+import { fetchAdd, fetchEdit, fetchGetAllRoles } from '@/service/api/system/admin';
 import { $t } from '@/locales';
-import { enableStatusOptions, userGenderOptions } from '@/constants/business';
+import { enableStatusOptions } from '@/constants/business';
+import { yesOrNoOptions } from '@/constants/common';
 
 defineOptions({
   name: 'UserOperateDrawer'
@@ -29,63 +30,51 @@ const visible = defineModel<boolean>('visible', {
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
-const { defaultRequiredRule } = useFormRules();
 
+// 标题
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: $t('page.manage.user.addUser'),
-    edit: $t('page.manage.user.editUser')
+    add: $t('page.manage.user.add'),
+    edit: $t('page.manage.user.edit')
   };
   return titles[props.operateType];
 });
 
-type Model = Pick<
-  Api.SystemManage.User,
-  'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'userRoles' | 'status'
->;
-
+// 表单数据
+type Model = Setting.SystemAdmin.Form;
 const model: Model = reactive(createDefaultModel());
-
 function createDefaultModel(): Model {
   return {
-    userName: '',
-    userGender: null,
-    nickName: '',
-    userPhone: '',
-    userEmail: '',
-    userRoles: [],
-    status: null
+    username: '',
+    is_enable: 'N',
+    is_super_admin: 'N',
+    avatar: '',
+    email: '',
+    phone: '',
+    roles: []
   };
 }
 
+// 表单规则
+const { defaultRequiredRule } = useFormRules();
 type RuleKey = Extract<keyof Model, 'userName' | 'status'>;
-
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  userName: defaultRequiredRule,
-  status: defaultRequiredRule
+  username: defaultRequiredRule,
+  email: defaultRequiredRule,
+  roles: defaultRequiredRule
 };
 
-/** the enabled role options */
+/** 获取所有角色 */
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
   const { error, data } = await fetchGetAllRoles();
 
   if (!error) {
-    const options = data.map(item => ({
-      label: item.roleName,
-      value: item.roleCode
+    roleOptions.value = data.map(item => ({
+      label: item.name,
+      value: item.id
     }));
-
-    // the mock data does not have the roleCode, so fill it
-    // if the real request, remove the following code
-    const userRoleOptions = model.userRoles.map(item => ({
-      label: item,
-      value: item
-    }));
-    // end
-
-    roleOptions.value = [...userRoleOptions, ...options];
   }
 }
 
@@ -101,12 +90,21 @@ function closeDrawer() {
   visible.value = false;
 }
 
+/** 提交 */
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+  const isEdit: boolean = props.operateType === 'edit';
+  let result;
+  if (isEdit) {
+    result = await fetchEdit(props.rowData.id, model);
+  } else {
+    result = await fetchAdd(model);
+  }
+  if (!result?.error) {
+    window.$message?.success($t(isEdit ? 'common.updateSuccess' : 'common.addSuccess'));
+    closeDrawer();
+    emit('submitted');
+  }
 }
 
 watch(visible, () => {
@@ -122,34 +120,34 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" display-directive="show" :width="360">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem :label="$t('page.manage.user.userName')" path="userName">
-          <NInput v-model:value="model.userName" :placeholder="$t('page.manage.user.form.userName')" />
+        <NFormItem :label="$t('page.manage.user.username')" path="username">
+          <NInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')" />
         </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userGender')" path="userGender">
-          <NRadioGroup v-model:value="model.userGender">
-            <NRadio v-for="item in userGenderOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-          </NRadioGroup>
+        <NFormItem :label="$t('page.manage.user.password')" path="password">
+          <NInput v-model:value="model.password" :placeholder="$t('page.manage.user.form.password')" />
         </NFormItem>
-        <NFormItem :label="$t('page.manage.user.nickName')" path="nickName">
-          <NInput v-model:value="model.nickName" :placeholder="$t('page.manage.user.form.nickName')" />
+        <NFormItem :label="$t('page.manage.user.email')" path="email">
+          <NInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')" />
         </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userPhone')" path="userPhone">
-          <NInput v-model:value="model.userPhone" :placeholder="$t('page.manage.user.form.userPhone')" />
+        <NFormItem :label="$t('page.manage.user.phone')" path="phone">
+          <NInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')" />
         </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
-          <NInput v-model:value="model.userEmail" :placeholder="$t('page.manage.user.form.userEmail')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userStatus')" path="status">
-          <NRadioGroup v-model:value="model.status">
+        <NFormItem :label="$t('page.manage.user.is_enable')" path="is_enable">
+          <NRadioGroup v-model:value="model.is_enable">
             <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
           </NRadioGroup>
         </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userRole')" path="roles">
+        <NFormItem :label="$t('page.manage.user.is_super_admin')" path="is_super_admin">
+          <NRadioGroup v-model:value="model.is_super_admin">
+            <NRadio v-for="item in yesOrNoOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+          </NRadioGroup>
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.roles')" path="roles">
           <NSelect
-            v-model:value="model.userRoles"
+            v-model:value="model.roles"
             multiple
             :options="roleOptions"
-            :placeholder="$t('page.manage.user.form.userRole')"
+            :placeholder="$t('page.manage.user.form.roles')"
           />
         </NFormItem>
       </NForm>

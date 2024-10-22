@@ -47,18 +47,21 @@ class AdminController extends BaseController
         DB::beginTransaction();
         try {
             # 添加用户
-            $insertData             = $request->only([
+            $insertData                   = $request->only([
                 'username',
                 'password',
-                'com_id',
+                'is_enable',
+                'is_super_admin',
                 'avatar',
                 'email',
                 'phone',
             ]);
-            $insertData['password'] = $insertData['password'] ? bcrypt($request->password) : bcrypt('123456');
-            $insertData['avatar']   = 'default.png';
-            $insertData['com_id']   = 1;
-            $admin                  = new SystemAdmin($insertData);
+            $insertData['password']       = $request->has('password') ? bcrypt($request->password) : bcrypt('123456');
+            $insertData['avatar']         = 'default.png';
+            $insertData['current_com_id'] = 1;
+            $insertData['created_by']     = auth()->id();
+            $insertData['updated_by']     = auth()->id();
+            $admin                        = new SystemAdmin($insertData);
             $admin->save();
 
             # 添加管理员角色关系
@@ -93,11 +96,16 @@ class AdminController extends BaseController
             $updateData             = $request->only([
                 'username',
                 'password',
-                'com_id',
+                'is_enable',
+                'is_super_admin',
                 'avatar',
                 'email',
-                'phone',]);
-            $updateData['password'] = bcrypt($request->password);
+                'phone',
+            ]);
+            $updateData['updated_by']     = auth()->id();
+            $updateData['password'] = $request->has('password')
+                ? bcrypt($request->password)
+                : $admin->password;
 
             # 更新用户
             $res = $admin->update($updateData);

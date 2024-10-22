@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof ApiException){
             return $this->error($e->getCode(), $e->getMessage());
         }
-
+        $msg = env('APP_DEBUG')?$e->getMessage():'服务器错误';
         return $this->error(500, $e->getMessage());
     }
 }

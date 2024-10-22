@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\System\Role\AddRequest;
 use App\Http\Requests\System\Role\AssignPermissionRequest;
+use App\Http\Requests\System\Role\UpdateRequest;
 use App\Models\SystemMenu;
 use App\Models\SystemRole;
 use Illuminate\Http\Request;
@@ -23,8 +24,24 @@ class RoleController extends BaseController
             ->when(!empty($request->name), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
             })
+
+            # 代码查询
+            ->when(!empty($request->code), function ($query) use ($request) {
+                $query->where('code', 'like', '%' . $request->code . '%');
+            })
             ->paginate($request->get('limit', 15));
         return $this->succPage($data);
+    }
+
+    /**
+     * 列表
+     */
+    public function getAllRoles()
+    {
+        $data = SystemRole::query()->select([
+            'id', 'name', 'code'
+        ])->get();
+        return $this->succData($data);
     }
 
     /**
@@ -53,7 +70,7 @@ class RoleController extends BaseController
      */
     public function update(UpdateRequest $request, SystemRole $role)
     {
-        $updateData = $request->only(['name', 'permission']);
+        $updateData = $request->only(['name', 'code', 'description']);
         $role->update($updateData);
         return $this->succOk();
     }

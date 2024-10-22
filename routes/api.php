@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Route;
 # 授权相关路由
 Route::group([
     'prefix' => 'auth',
-    'as' => 'auth.',
+    'as'     => 'auth.',
 ], function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::middleware(['auth:sanctum','permission'])->group(function () {
+    Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
@@ -26,12 +26,12 @@ Route::group([
 
 
 # 需要认证的路由
-Route::middleware(['auth:sanctum','permission'])->group(function () {
+Route::middleware(['auth:sanctum', 'permission'])->group(function () {
 
     # 系统管理
     Route::group([
         'prefix' => 'system',
-        'as' => 'system.',
+        'as'     => 'system.',
     ], function () {
         # 管理员
         Route::apiResource('/admin', AdminController::class);
@@ -40,8 +40,9 @@ Route::middleware(['auth:sanctum','permission'])->group(function () {
         Route::apiResource('/company', CompanyController::class);
 
         # 角色
+        Route::post('/role/assign_permission/{role}', [RoleController::class, 'assignPermission'])->name('role.assign-permission');
+        Route::get('/role/get_all_roles', [RoleController::class, 'getAllRoles'])->name('role.get-roles');
         Route::apiResource('/role', RoleController::class);
-        Route::post('/assign_permission/{role}', [RoleController::class, 'assignPermission'])->name('role.assign-permission');
 
         # 菜单/权限
         Route::apiResource('/menu', MenuController::class);

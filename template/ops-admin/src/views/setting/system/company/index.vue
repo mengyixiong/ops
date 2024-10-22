@@ -2,11 +2,11 @@
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
-import {enableStatusRecord, YesOrNoRecord} from '@/constants/business';
+import { YesOrNoRecord } from '@/constants/business';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import { fetchGetCompanyList } from '@/service/api/system/company';
-import UserOperateDrawer from './modules/user-operate-drawer.vue';
-import UserSearch from './modules/user-search.vue';
+import { fetchDel, fetchGetCompanyList } from '@/service/api/system/company';
+import OperateDrawer from './modules/operate-drawer.vue';
+import CompanySearch from './modules/company-search.vue';
 
 const appStore = useAppStore();
 
@@ -25,15 +25,7 @@ const {
   showTotal: true,
   apiParams: {
     page: 1,
-    limit: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    status: null,
-    userName: null,
-    userGender: null,
-    nickName: null,
-    userPhone: null,
-    userEmail: null
+    limit: 10
   },
   columns: () => [
     {
@@ -129,18 +121,19 @@ const {
   // closeDrawer
 } = useTableOperate(data, getData);
 
+/**
+ * 批量删除
+ */
 async function handleBatchDelete() {
   // request
-  console.log(checkedRowKeys.value);
 
-  onBatchDeleted();
+  await onBatchDeleted();
 }
 
-function handleDelete(id: number) {
+async function handleDelete(id: number) {
   // request
-  console.log(id);
-
-  onDeleted();
+  await fetchDel(id);
+  await onDeleted();
 }
 
 function edit(id: number) {
@@ -150,7 +143,7 @@ function edit(id: number) {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <CompanySearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard
       :title="$t('page.manage.company.title')"
       :bordered="false"
@@ -180,7 +173,7 @@ function edit(id: number) {
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <UserOperateDrawer
+      <OperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"

@@ -20,7 +20,7 @@ declare namespace Api {
       data: T[];
     }
 
-    /** common search params of table */
+    /** common search params of table pick的作用是从前面这个类型中挑选出page&limit组成一个新的类型 */
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'page' | 'limit'>;
 
     /**
@@ -44,6 +44,9 @@ declare namespace Api {
       /** record update time */
       updated_at: string;
     } & T;
+
+    /** 列表数据 */
+    type List<T> = Api.Common.PaginatingQueryRecord<T>;
   }
 
   /**

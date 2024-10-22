@@ -14,7 +14,7 @@ class AddRequest extends BaseRequest
             'username' => 'required|between:2,20|unique:system_admins,username',
             'password' => 'sometimes|between:6,20',
             'email'    => 'required|email|unique:system_admins,email',
-            'roles'    => 'required'
+            'roles'    => 'required|array|exists:system_roles,id'
         ];
     }
 
@@ -29,6 +29,8 @@ class AddRequest extends BaseRequest
             'email.email'       => '邮箱格式不正确',
             'email.unique'      => '邮箱已存在',
             'roles.required'    => '请选择角色',
+            'roles.array'       => '请选择角色',
+            'roles.exists'      => '角色不存在',
         ];
     }
 }

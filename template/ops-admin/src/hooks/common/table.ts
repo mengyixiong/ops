@@ -122,11 +122,10 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     showSizePicker: true,
     pageSizes: [10, 15, 20, 25, 30],
     onUpdatePage: async (page: number) => {
-      pagination.page = page;
-
+      console.log(pagination)
       updateSearchParams({
-        current: page,
-        size: pagination.pageSize!
+        page: page,
+        limit: pagination.pageSize!
       });
 
       getData();
@@ -136,8 +135,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       pagination.page = 1;
 
       updateSearchParams({
-        current: pagination.page,
-        size: pageSize
+        page: pagination.page,
+        limit: pageSize
       });
 
       getData();

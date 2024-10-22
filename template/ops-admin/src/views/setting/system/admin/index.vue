@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetUserList } from '@/service/api/system/admin';
+import { fetchDel, fetchGetUserList } from '@/service/api/system/admin';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { YesOrNoRecord } from '@/constants/business';
@@ -41,6 +41,29 @@ const {
       fixed: 'left',
       align: 'center',
       width: 48
+    },
+    {
+      key: 'operate',
+      title: $t('common.operate'),
+      align: 'center',
+      width: 130,
+      render: row => (
+        <div class="flex-center gap-8px">
+          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
+            {$t('common.edit')}
+          </NButton>
+          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+            {{
+              default: () => $t('common.confirmDelete'),
+              trigger: () => (
+                <NButton type="error" ghost size="small">
+                  {$t('common.delete')}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        </div>
+      )
     },
     {
       key: 'index',
@@ -141,29 +164,6 @@ const {
       title: $t('common.updated_at'),
       align: 'center',
       minWidth: 200
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => (
-        <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
     }
   ]
 });
@@ -186,11 +186,12 @@ async function handleBatchDelete() {
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
+async function handleDelete(id: number) {
   // request
-  console.log(id);
-
-  onDeleted();
+  const { error } = await fetchDel(id);
+  if (!error) {
+    await onDeleted();
+  }
 }
 
 function edit(id: number) {
@@ -218,7 +219,7 @@ function edit(id: number) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1800"
+        :scroll-x="2000"
         :loading="loading"
         remote
         :row-key="row => row.id"

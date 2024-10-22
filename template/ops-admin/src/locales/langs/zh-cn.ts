@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'Soybean 管理系统',
+    title: 'Ops 管理系统',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -162,12 +162,14 @@ const local: App.I18n.Schema = {
     manage: {
       user: {
         username: '用户名',
+        password: '密码',
         is_enable: '启用',
         is_super_admin: '超级管理员',
         current_com_name: '当前主体',
         avatar: '头像',
         email: '邮箱',
         phone: '手机号码',
+        roles: '角色',
         last_login_at: '最后登录时间',
         last_login_ip: '最后登录IP',
         created_at: '创建时间',
@@ -185,7 +187,15 @@ const local: App.I18n.Schema = {
         addSuccess: '新增用户成功',
         addFailed: '新增用户失败',
         editSuccess: '编辑用户成功',
-        editFailed: '编辑用户失败'
+        editFailed: '编辑用户失败',
+        form: {
+          username: '请输入用户名',
+          password: '请输入密码',
+          avatar: '头像',
+          email: '请输入邮箱',
+          phone: '请输入手机号码',
+          roles: '请选择角色'
+        }
       },
       company: {
         name: '主体名称',
@@ -203,7 +213,36 @@ const local: App.I18n.Schema = {
         addSuccess: '新增主体成功',
         addFailed: '新增主体失败',
         editSuccess: '编辑主体成功',
-        editFailed: '编辑主体失败'
+        editFailed: '编辑主体失败',
+        form: {
+          name: '请输入主体名称',
+          is_default: '是否默认主体',
+          abb: '请输入主体简称',
+        }
+      },
+      role: {
+        name: '角色名称',
+        code: '角色代码',
+        description: '描述',
+        title: '角色管理',
+        assignPermissions: '分配权限',
+        add: '新增角色',
+        edit: '编辑角色',
+        delete: '删除角色',
+        deleteSuccess: '删除角色成功',
+        confirmDelete: '确认删除角色吗？',
+        deleteConfirm: '删除角色后不可恢复，确认删除吗？',
+        deleteSuccess: '删除角色成功',
+        deleteFailed: '删除角色失败',
+        addSuccess: '新增角色成功',
+        addFailed: '新增角色失败',
+        editSuccess: '编辑角色成功',
+        editFailed: '编辑角色失败',
+        form: {
+          name: '请输入角色名称',
+          code: '请输入角色代码',
+          description: '请输入角色描述'
+        }
       },
       common:{
         status: {
