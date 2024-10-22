@@ -22,6 +22,7 @@ class AdminController extends BaseController
     public function index(Request $request)
     {
         $data = SystemAdmin::query()
+            ->with('roles') // 只选择 roles 关联的 id 字段
             ->leftJoin('system_companies as b', 'system_admins.current_com_id', '=', 'b.id')
             # 用户名查询
             ->when(!empty($request->username), function ($query) use ($request) {
@@ -35,6 +36,17 @@ class AdminController extends BaseController
             ->orderBy('created_at', 'desc')
             ->select(['system_admins.*', 'b.name as current_com_name'])
             ->paginate($request->get('limit', 15));
+
+        # 现在处理每个用户，将角色 IDs 提取为一个数组
+        $transformedCollection = $data->getCollection()->transform(function ($user) {
+            # 提取角色ID并重新赋值
+            $user->roles = $user->roles->pluck('id')->toArray();
+            $user->setRelation('roles', $user->roles);
+            return $user;
+        });
+
+        // 将修改后的集合重新设置回分页对象
+        $data->setCollection($transformedCollection);
 
         return $this->succPage($data);
     }
