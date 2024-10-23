@@ -9,8 +9,11 @@ if (!function_exists('buildTree')) {
 
         foreach ($items as $item) {
             if ($item['pid'] == $parentId) {
-                $item['children'] = buildTree($items, $item['id']);
-                $branch[]         = $item;
+                $children = buildTree($items, $item['id']);
+                if (!empty($children)) {
+                    $item['children'] = $children;
+                }
+                $branch[] = $item;
             }
         }
 

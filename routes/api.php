@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::apiResource('/role', RoleController::class);
 
         # 菜单/权限
+        Route::get('/menu/get_all_menus', [MenuController::class, 'getAllMenus'])->name('role.get-all-menus');
         Route::apiResource('/menu', MenuController::class);
     });
 });

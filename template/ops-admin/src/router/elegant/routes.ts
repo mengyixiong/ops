@@ -40,6 +40,36 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'finance',
+    path: '/finance',
+    component: 'layout.base',
+    meta: {
+      title: 'finance',
+      i18nKey: 'route.finance'
+    },
+    children: [
+      {
+        name: 'finance_finance-data',
+        path: '/finance/finance-data',
+        meta: {
+          title: 'finance_finance-data',
+          i18nKey: 'route.finance_finance-data'
+        },
+        children: [
+          {
+            name: 'finance_finance-data_subject',
+            path: '/finance/finance-data/subject',
+            component: 'view.finance_finance-data_subject',
+            meta: {
+              title: 'finance_finance-data_subject',
+              i18nKey: 'route.finance_finance-data_subject'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     name: 'home',
     path: '/home',
     component: 'layout.base$view.home',

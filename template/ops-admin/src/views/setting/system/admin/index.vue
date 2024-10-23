@@ -98,6 +98,29 @@ const {
       }
     },
     {
+      key: 'roles',
+      title: $t('page.manage.user.roles'),
+      align: 'center',
+      minWidth: 100,
+      ellipsis: {
+        tooltip: true
+      },
+      render: row => {
+        if (row.role_names === null) {
+          return null;
+        }
+        return (
+          <NSpace>
+            {row.role_names.map((tag, index) => (
+              <NTag key={index} type="info">
+                {tag}
+              </NTag>
+            ))}
+          </NSpace>
+        );
+      }
+    },
+    {
       key: 'is_super_admin',
       title: $t('page.manage.user.is_super_admin'),
       align: 'center',
@@ -195,6 +218,7 @@ async function handleDelete(id: number) {
 }
 
 function edit(id: number) {
+  console.log(id)
   handleEdit(id);
 }
 </script>

@@ -39,6 +39,7 @@ class AdminController extends BaseController
 
         # 现在处理每个用户，将角色 IDs 提取为一个数组
         $transformedCollection = $data->getCollection()->transform(function ($user) {
+            $user->role_names = $user->roles->pluck('name');
             # 提取角色ID并重新赋值
             $user->roles = $user->roles->pluck('id')->toArray();
             $user->setRelation('roles', $user->roles);

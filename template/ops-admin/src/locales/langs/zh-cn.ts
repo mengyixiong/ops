@@ -217,7 +217,7 @@ const local: App.I18n.Schema = {
         form: {
           name: '请输入主体名称',
           is_default: '是否默认主体',
-          abb: '请输入主体简称',
+          abb: '请输入主体简称'
         }
       },
       role: {
@@ -244,7 +244,50 @@ const local: App.I18n.Schema = {
           description: '请输入角色描述'
         }
       },
-      common:{
+      menu: {
+        id: 'Id',
+        title: '菜单名称',
+        pid: '上级菜单',
+        is_hide_menu: '菜单隐藏',
+        name: '前端名称',
+        path: '前端路径',
+        icon: '菜单图标',
+        permission: '权限码',
+        component: '组件名称',
+        i18n_key: '多语言',
+        sort: '排序',
+        type: '类型',
+        add: '新增菜单',
+        edit: '编辑菜单',
+        delete: '删除菜单',
+        addChildMenu: '添加子菜单',
+        deleteSuccess: '删除菜单成功',
+        confirmDelete: '确认删除菜单吗？',
+        deleteConfirm: '删除菜单后不可恢复，确认删除吗？',
+        deleteSuccess: '删除菜单成功',
+        deleteFailed: '删除菜单失败',
+        addSuccess: '新增菜单成功',
+        addFailed: '新增菜单失败',
+        editSuccess: '编辑菜单成功',
+        editFailed: '编辑菜单失败',
+        types: {
+          menu: '菜单',
+          permission: '权限'
+        },
+        form: {
+          title: '请输入菜单名称',
+          pid: '请选择上级菜单',
+          name: '请填写路由名称',
+          path: '请填写路由路径',
+          icon: '菜单图标',
+          permission: '请填写权限码',
+          component: '请填写组件名称',
+          i18n_key: '请填写多语言',
+          sort: '请填写排序',
+          type: '请选择类型'
+        }
+      },
+      common: {
         status: {
           yes: '启用',
           no: '禁用'

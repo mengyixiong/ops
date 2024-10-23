@@ -20,6 +20,9 @@ declare module "@elegant-router/types" {
     "403": "/403";
     "404": "/404";
     "500": "/500";
+    "finance": "/finance";
+    "finance_finance-data": "/finance/finance-data";
+    "finance_finance-data_subject": "/finance/finance-data/subject";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
@@ -63,6 +66,7 @@ declare module "@elegant-router/types" {
     | "403"
     | "404"
     | "500"
+    | "finance"
     | "home"
     | "iframe-page"
     | "login"
@@ -88,6 +92,7 @@ declare module "@elegant-router/types" {
     | "500"
     | "iframe-page"
     | "login"
+    | "finance_finance-data_subject"
     | "home"
     | "setting_system_admin"
     | "setting_system_company"
