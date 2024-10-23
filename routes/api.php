@@ -5,6 +5,7 @@ use App\Http\Controllers\System\CompanyController;
 use App\Http\Controllers\System\MenuController;
 use App\Http\Controllers\System\RoleController;
 use App\Http\Controllers\System\AdminController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 # 授权相关路由
@@ -24,6 +25,13 @@ Route::group([
     });
 });
 
+# 上传文件
+Route::group([
+    'prefix' => 'upload',
+    'as'     => 'upload.',
+], function () {
+    Route::post('/upload_avatar', [UploadController::class, 'uploadAvatar'])->name('upload_avatar');
+});
 
 # 需要认证的路由
 Route::middleware(['auth:sanctum', 'permission'])->group(function () {
@@ -48,6 +56,7 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::get('/menu/get_all_menus', [MenuController::class, 'getAllMenus'])->name('role.get-all-menus');
         Route::apiResource('/menu', MenuController::class);
     });
+
 });
 
 

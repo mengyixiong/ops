@@ -70,7 +70,7 @@ class AdminController extends BaseController
                 'phone',
             ]);
             $insertData['password']       = $request->has('password') ? bcrypt($request->password) : bcrypt('123456');
-            $insertData['avatar']         = 'default.png';
+            $insertData['avatar']         = $request->has('avatar') ? getUri($request->avatar) : 'default.png';
             $insertData['current_com_id'] = 1;
             $insertData['created_by']     = auth()->id();
             $insertData['updated_by']     = auth()->id();
@@ -116,6 +116,7 @@ class AdminController extends BaseController
                 'phone',
             ]);
             $updateData['updated_by']     = auth()->id();
+            $updateData['avatar']         = $request->has('avatar') ? getUri($request->avatar) : $admin->avatar;
             $updateData['password'] = $request->has('password')
                 ? bcrypt($request->password)
                 : $admin->password;

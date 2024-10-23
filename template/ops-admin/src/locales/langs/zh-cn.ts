@@ -43,6 +43,8 @@ const local: App.I18n.Schema = {
     trigger: '触发',
     update: '更新',
     updateSuccess: '更新成功',
+    uploadSuccess: '上传成功',
+    uploadFailed: '上传失败',
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
@@ -270,6 +272,8 @@ const local: App.I18n.Schema = {
         addFailed: '新增菜单失败',
         editSuccess: '编辑菜单成功',
         editFailed: '编辑菜单失败',
+        unfold: '展开',
+        fold: '折叠',
         types: {
           menu: '菜单',
           permission: '权限'

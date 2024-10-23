@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\GlobalConstant;
+use App\Exceptions\ApiException;
 
 if (!function_exists('buildTree')) {
     function buildTree($items, $parentId = 0): array
@@ -65,5 +66,15 @@ if (!function_exists('buildFrontRouter')) {
             $routes[] = $route;
         }
         return $routes;
+    }
+}
+
+if (!function_exists('getUri')) {
+    function getUri($url): string
+    {
+        if (!$url) {
+            throw new ApiException('url不存在');
+        }
+        return parse_url($url, PHP_URL_PATH);
     }
 }

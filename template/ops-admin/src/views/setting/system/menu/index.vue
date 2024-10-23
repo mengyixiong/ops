@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
 import type { Ref } from 'vue';
+import { ref } from 'vue';
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetList } from '@/service/api/system/menu';
@@ -13,11 +13,9 @@ import SvgIcon from '@/components/custom/svg-icon.vue';
 import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
 
 const appStore = useAppStore();
-
 const { bool: visible, setTrue: openModal } = useBoolean();
-
 const wrapperRef = ref<HTMLElement | null>(null);
-
+const operateType = ref<OperateType>('add');
 const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useTable({
   apiFn: fetchGetList,
   columns: () => [
@@ -71,9 +69,9 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       align: 'center',
       width: 60,
       render: row => {
-        const icon =  row.icon;
+        const icon = row.icon;
 
-        const localIcon =  undefined;
+        const localIcon = undefined;
 
         return (
           <div class="flex-center">
@@ -162,10 +160,9 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
     }
   ]
 });
-
 const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
-
-const operateType = ref<OperateType>('add');
+const expands = ref<number[]>([]); // 展开的菜单
+const editingData: Ref<Setting.SystemMenu.Menu | null> = ref(null); // 编辑的数据
 
 function handleAdd() {
   operateType.value = 'add';
@@ -173,51 +170,27 @@ function handleAdd() {
 }
 
 async function handleBatchDelete() {
-  // request
-  console.log(checkedRowKeys.value);
-
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
-  // request
-  console.log(id);
 
+function handleDelete(id: number) {
+  console.log(id)
   onDeleted();
 }
-
-/** the edit menu data or the parent menu data when adding a child menu */
-const editingData: Ref<Api.SystemManage.Menu | null> = ref(null);
 
 function handleEdit(item: Setting.SystemMenu.Menu) {
   operateType.value = 'edit';
   editingData.value = { ...item };
-
   openModal();
 }
 
 function handleAddChildMenu(item: Api.SystemManage.Menu) {
   operateType.value = 'addChild';
-
   editingData.value = { ...item };
-
   openModal();
 }
 
-const allPages = ref<string[]>([]);
-
-async function getAllPages() {
-  // const { data: pages } = await fetchGetAllPages();
-  // allPages.value = pages || [];
-  allPages.value =  [];
-}
-
-function init() {
-  getAllPages();
-}
-
-// init
-init();
 </script>
 
 <template>
@@ -231,17 +204,19 @@ init();
           @add="handleAdd"
           @delete="handleBatchDelete"
           @refresh="getData"
-        />
+        >
+
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
+        :row-key="row => row.id"
         :columns="columns"
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
         :scroll-x="1088"
         :loading="loading"
-        :row-key="row => row.id"
         remote
         :pagination="pagination"
         class="sm:h-full"
@@ -250,7 +225,7 @@ init();
         v-model:visible="visible"
         :operate-type="operateType"
         :row-data="editingData"
-        :all-pages="allPages"
+        :all-pages="[]"
         @submitted="getDataByPage"
       />
     </NCard>

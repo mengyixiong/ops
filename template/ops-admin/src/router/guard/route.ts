@@ -93,7 +93,6 @@ export function createRouteGuard(router: Router) {
  * @param to to route
  */
 async function initRoute(to: RouteLocationNormalized): Promise<RouteLocationRaw | null> {
-  console.log(to);
   const authStore = useAuthStore();
   const routeStore = useRouteStore();
 

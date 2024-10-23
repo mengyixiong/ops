@@ -18,6 +18,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   403: () => import("@/views/_builtin/403/index.vue"),
   404: () => import("@/views/_builtin/404/index.vue"),
   500: () => import("@/views/_builtin/500/index.vue"),
+  avatar: () => import("@/views/_builtin/avatar/index.vue"),
   "iframe-page": () => import("@/views/_builtin/iframe-page/[url].vue"),
   login: () => import("@/views/_builtin/login/index.vue"),
   "finance_finance-data_subject": () => import("@/views/finance/finance-data/subject/index.vue"),

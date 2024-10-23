@@ -9,7 +9,7 @@ import type { RequestInstanceState } from './type';
 
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
-
+export const baseUrl = baseURL;
 export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL,

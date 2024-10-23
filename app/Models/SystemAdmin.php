@@ -33,4 +33,9 @@ class SystemAdmin extends Authenticatable
     {
         return $this->belongsToMany(SystemRole::class, 'system_admin_roles', 'admin_id', 'role_id');
     }
+
+    public function getAvatarAttribute($value)
+    {
+        return request()->root() . $value;
+    }
 }

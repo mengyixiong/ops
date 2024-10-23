@@ -60,12 +60,17 @@ function refresh() {
         {{ $t('common.confirmDelete') }}
       </NPopconfirm>
     </slot>
-    <NButton size="small" @click="refresh">
-      <template #icon>
-        <icon-mdi-refresh class="text-icon" :class="{ 'animate-spin': loading }" />
+    <n-tooltip>
+      <template #trigger>
+        <NButton size="small" @click="refresh">
+          <template #icon>
+            <icon-mdi-refresh class="text-icon" :class="{ 'animate-spin': loading }" />
+          </template>
+        </NButton>
       </template>
       {{ $t('common.refresh') }}
-    </NButton>
+    </n-tooltip>
+
     <TableColumnSetting v-model:columns="columns" />
     <slot name="suffix"></slot>
   </NSpace>

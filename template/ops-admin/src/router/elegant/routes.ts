@@ -40,6 +40,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'avatar',
+    path: '/avatar',
+    component: 'layout.base$view.avatar',
+    meta: {
+      title: 'avatar',
+      i18nKey: 'route.avatar'
+    }
+  },
+  {
     name: 'finance',
     path: '/finance',
     component: 'layout.base',

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+import { NButton } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { fetchAdd, fetchEdit, fetchGetAllRoles } from '@/service/api/system/admin';
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
 import { yesOrNoOptions } from '@/constants/common';
+import { baseUrl } from '@/service/request';
 
 defineOptions({
   name: 'UserOperateDrawer'
@@ -43,8 +45,10 @@ const title = computed(() => {
 // 表单数据
 type Model = Setting.SystemAdmin.Form;
 const model: Model = reactive(createDefaultModel());
+
 function createDefaultModel(): Model {
   return {
+    avatar: '',
     username: '',
     is_enable: 'N',
     is_super_admin: 'N',
@@ -114,6 +118,18 @@ watch(visible, () => {
     getRoleOptions();
   }
 });
+
+const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  if ((event?.target as XMLHttpRequest).response) {
+    const resp = JSON.parse(event.target.response);
+    if (resp.code === 200) {
+      model.avatar = resp.data.url;
+      console.log(model)
+      return file;
+    }
+  }
+  window.$message?.error($t('common.uploadFailed'));
+};
 </script>
 
 <template>
@@ -122,6 +138,24 @@ watch(visible, () => {
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem :label="$t('page.manage.user.username')" path="username">
           <NInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.avatar')" path="avatar">
+          <NUpload
+            show-remove-button
+            :show-file-list="false"
+            :trigger-style="{ borderRadius: '50%' }"
+            :action="baseUrl + '/upload/upload_avatar'"
+            @finish="handleFinish"
+          >
+            <template #default>
+              <NAvatar
+                round
+                :size="100"
+                :src="model.avatar"
+                fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+              />
+            </template>
+          </NUpload>
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.password')" path="password">
           <NInput v-model:value="model.password" :placeholder="$t('page.manage.user.form.password')" />
@@ -145,6 +179,8 @@ watch(visible, () => {
         <NFormItem :label="$t('page.manage.user.roles')" path="roles">
           <NSelect
             v-model:value="model.roles"
+            clearable
+            filterable
             multiple
             :options="roleOptions"
             :placeholder="$t('page.manage.user.form.roles')"

@@ -20,6 +20,7 @@ declare module "@elegant-router/types" {
     "403": "/403";
     "404": "/404";
     "500": "/500";
+    "avatar": "/avatar";
     "finance": "/finance";
     "finance_finance-data": "/finance/finance-data";
     "finance_finance-data_subject": "/finance/finance-data/subject";
@@ -66,6 +67,7 @@ declare module "@elegant-router/types" {
     | "403"
     | "404"
     | "500"
+    | "avatar"
     | "finance"
     | "home"
     | "iframe-page"
@@ -90,6 +92,7 @@ declare module "@elegant-router/types" {
     | "403"
     | "404"
     | "500"
+    | "avatar"
     | "iframe-page"
     | "login"
     | "finance_finance-data_subject"

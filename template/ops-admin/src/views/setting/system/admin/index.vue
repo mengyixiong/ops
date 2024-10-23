@@ -1,10 +1,11 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchDel, fetchGetUserList } from '@/service/api/system/admin';
-import { $t } from '@/locales';
-import { useAppStore } from '@/store/modules/app';
-import { YesOrNoRecord } from '@/constants/business';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import {NButton, NPopconfirm, NTag} from 'naive-ui';
+import {fetchDel, fetchGetUserList} from '@/service/api/system/admin';
+import {$t} from '@/locales';
+import {useAppStore} from '@/store/modules/app';
+import {YesOrNoRecord} from '@/constants/business';
+import {useTable, useTableOperate} from '@/hooks/common/table';
+import AvatarImg from '@/views/_builtin/avatar/index.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
@@ -150,14 +151,21 @@ const {
       key: 'avatar',
       title: $t('page.manage.user.avatar'),
       align: 'center',
-      width: 120
+      width: 120,
+      render: row => {
+        return <AvatarImg width={40} src={row.avatar} />;
+      }
     },
     {
       key: 'email',
-      title: $t('page.manage.user.email'),
-      align: 'center',
-      minWidth: 200
-    },
+      title:
+        $t('page.manage.user.email'),
+      align:
+        'center',
+      minWidth
+:
+  200
+},
     {
       key: 'phone',
       title: $t('page.manage.user.phone'),
@@ -211,21 +219,22 @@ async function handleBatchDelete() {
 
 async function handleDelete(id: number) {
   // request
-  const { error } = await fetchDel(id);
+  const {error} = await fetchDel(id);
   if (!error) {
     await onDeleted();
   }
 }
 
 function edit(id: number) {
-  console.log(id)
   handleEdit(id);
 }
+
+
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage"/>
     <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -235,7 +244,7 @@ function edit(id: number) {
           @add="handleAdd"
           @delete="handleBatchDelete"
           @refresh="getData"
-        />
+        ></TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
