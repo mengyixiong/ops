@@ -105,6 +105,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         },
         children: [
           {
+            name: 'finance_basic-data_stream',
+            path: '/finance/basic-data/stream',
+            component: 'view.finance_basic-data_stream',
+            meta: {
+              title: 'finance_basic-data_stream',
+              i18nKey: 'route.finance_basic-data_stream'
+            }
+          },
+          {
             name: 'finance_basic-data_subject',
             path: '/finance/basic-data/subject',
             component: 'view.finance_basic-data_subject',

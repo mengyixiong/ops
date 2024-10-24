@@ -23,6 +23,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   login: () => import("@/views/_builtin/login/index.vue"),
   "business_orders_sea-export": () => import("@/views/business/orders/sea-export/index.vue"),
   "business_orders_sea-import": () => import("@/views/business/orders/sea-import/index.vue"),
+  "finance_basic-data_stream": () => import("@/views/finance/basic-data/stream/index.vue"),
   "finance_basic-data_subject": () => import("@/views/finance/basic-data/subject/index.vue"),
   home: () => import("@/views/home/index.vue"),
   setting_system_admin: () => import("@/views/setting/system/admin/index.vue"),
