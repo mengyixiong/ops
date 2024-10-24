@@ -1,11 +1,13 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
-import { $t } from '@/locales';
-import { useAppStore } from '@/store/modules/app';
-import { useTable, useTableOperate } from '@/hooks/common/table';
-import { fetchDel, fetchGetList } from '@/service/api/system/role';
+import {NButton, NPopconfirm} from 'naive-ui';
+import {ref} from 'vue'
+import {$t} from '@/locales';
+import {useAppStore} from '@/store/modules/app';
+import {useTable, useTableOperate} from '@/hooks/common/table';
+import {fetchDel, fetchGetList} from '@/service/api/system/role';
 import OperateDrawer from './modules/operate-drawer.vue';
 import SearchForm from './modules/search-form.vue';
+import AssignPermission from './modules/assign-permission.vue'
 
 const appStore = useAppStore();
 
@@ -127,7 +129,7 @@ async function handleBatchDelete() {
 
 async function handleDelete(id: number) {
   // request
-  const { error } = await fetchDel(id);
+  const {error} = await fetchDel(id);
   if (!error) {
     await onDeleted();
   }
@@ -137,19 +139,23 @@ function edit(id: number) {
   handleEdit(id);
 }
 
+const assignPermissionVisible = ref(false);
+const id = ref(0);
+
 /**
  * 分配权限
  *
- * @param id
+ * @param roleId
  */
-function assignPermission(id: number) {
-  console.log(id);
+function assignPermission(roleId: number) {
+  assignPermissionVisible.value = true;
+  id.value = roleId;
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <SearchForm v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <SearchForm v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage"/>
     <NCard :title="$t('page.manage.role.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -179,6 +185,11 @@ function assignPermission(id: number) {
         :operate-type="operateType"
         :row-data="editingData"
         @submitted="getDataByPage"
+      />
+
+      <AssignPermission
+        :id="id"
+        v-model:visible="assignPermissionVisible"
       />
     </NCard>
   </div>

@@ -21,9 +21,13 @@ declare module "@elegant-router/types" {
     "404": "/404";
     "500": "/500";
     "avatar": "/avatar";
+    "business": "/business";
+    "business_orders": "/business/orders";
+    "business_orders_sea-export": "/business/orders/sea-export";
+    "business_orders_sea-import": "/business/orders/sea-import";
     "finance": "/finance";
-    "finance_finance-data": "/finance/finance-data";
-    "finance_finance-data_subject": "/finance/finance-data/subject";
+    "finance_basic-data": "/finance/basic-data";
+    "finance_basic-data_subject": "/finance/basic-data/subject";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
@@ -33,6 +37,13 @@ declare module "@elegant-router/types" {
     "setting_system_company": "/setting/system/company";
     "setting_system_menu": "/setting/system/menu";
     "setting_system_role": "/setting/system/role";
+    "warehouse": "/warehouse";
+    "warehouse_data": "/warehouse/data";
+    "warehouse_data_material": "/warehouse/data/material";
+    "warehouse_data_warehouse": "/warehouse/data/warehouse";
+    "warehouse_funds": "/warehouse/funds";
+    "warehouse_funds_payment-order": "/warehouse/funds/payment-order";
+    "warehouse_funds_receiving-order": "/warehouse/funds/receiving-order";
   };
 
   /**
@@ -68,11 +79,13 @@ declare module "@elegant-router/types" {
     | "404"
     | "500"
     | "avatar"
+    | "business"
     | "finance"
     | "home"
     | "iframe-page"
     | "login"
     | "setting"
+    | "warehouse"
   >;
 
   /**
@@ -95,12 +108,18 @@ declare module "@elegant-router/types" {
     | "avatar"
     | "iframe-page"
     | "login"
-    | "finance_finance-data_subject"
+    | "business_orders_sea-export"
+    | "business_orders_sea-import"
+    | "finance_basic-data_subject"
     | "home"
     | "setting_system_admin"
     | "setting_system_company"
     | "setting_system_menu"
     | "setting_system_role"
+    | "warehouse_data_material"
+    | "warehouse_data_warehouse"
+    | "warehouse_funds_payment-order"
+    | "warehouse_funds_receiving-order"
   >;
 
   /**

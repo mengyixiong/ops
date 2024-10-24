@@ -105,11 +105,11 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       return filteredColumns;
     },
     onFetched: async transformed => {
-      const { pageNum, pageSize, total } = transformed;
+      const { page, limit, total } = transformed;
 
       updatePagination({
-        page: pageNum,
-        pageSize,
+        page,
+        pageSize: limit,
         itemCount: total
       });
     },
@@ -122,12 +122,10 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     showSizePicker: true,
     pageSizes: [10, 15, 20, 25, 30],
     onUpdatePage: async (page: number) => {
-      console.log(pagination)
       updateSearchParams({
-        page: page,
-        limit: pagination.pageSize!
+        page,
+        limit: pagination.pageSize
       });
-
       getData();
     },
     onUpdatePageSize: async (pageSize: number) => {
@@ -174,8 +172,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     });
 
     updateSearchParams({
-      current: pageNum,
-      size: pagination.pageSize!
+      page: pageNum,
+      limit: pagination.pageSize!
     });
 
     await getData();

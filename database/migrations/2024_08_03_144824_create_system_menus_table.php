@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('path', 100)->nullable()->comment('菜单路径,type:1时必填');
             $table->string('component', 100)->nullable()->comment('组件名称,type:1时必填');
             $table->string('icon', 50)->nullable()->comment('菜单图标');
-            $table->integer('com_id')->comment('主体ID,不属于任何主体时为0')->default(0);
+            $table->json('com_id')->comment('主体ID,不属于任何主体时为0')->nullable();
             $table->string('permission', 50)->nullable()->comment('菜单权限, type为2时必填');;
             $table->enum('type', ['1', '2'])->default('1')->comment('1: 菜单 2: 权限');
             $table->softDeletes();

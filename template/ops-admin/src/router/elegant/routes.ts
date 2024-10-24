@@ -49,6 +49,45 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'business',
+    path: '/business',
+    component: 'layout.base',
+    meta: {
+      title: 'business',
+      i18nKey: 'route.business'
+    },
+    children: [
+      {
+        name: 'business_orders',
+        path: '/business/orders',
+        meta: {
+          title: 'business_orders',
+          i18nKey: 'route.business_orders'
+        },
+        children: [
+          {
+            name: 'business_orders_sea-export',
+            path: '/business/orders/sea-export',
+            component: 'view.business_orders_sea-export',
+            meta: {
+              title: 'business_orders_sea-export',
+              i18nKey: 'route.business_orders_sea-export'
+            }
+          },
+          {
+            name: 'business_orders_sea-import',
+            path: '/business/orders/sea-import',
+            component: 'view.business_orders_sea-import',
+            meta: {
+              title: 'business_orders_sea-import',
+              i18nKey: 'route.business_orders_sea-import'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     name: 'finance',
     path: '/finance',
     component: 'layout.base',
@@ -58,20 +97,20 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
-        name: 'finance_finance-data',
-        path: '/finance/finance-data',
+        name: 'finance_basic-data',
+        path: '/finance/basic-data',
         meta: {
-          title: 'finance_finance-data',
-          i18nKey: 'route.finance_finance-data'
+          title: 'finance_basic-data',
+          i18nKey: 'route.finance_basic-data'
         },
         children: [
           {
-            name: 'finance_finance-data_subject',
-            path: '/finance/finance-data/subject',
-            component: 'view.finance_finance-data_subject',
+            name: 'finance_basic-data_subject',
+            path: '/finance/basic-data/subject',
+            component: 'view.finance_basic-data_subject',
             meta: {
-              title: 'finance_finance-data_subject',
-              i18nKey: 'route.finance_finance-data_subject'
+              title: 'finance_basic-data_subject',
+              i18nKey: 'route.finance_basic-data_subject'
             }
           }
         ]
@@ -163,6 +202,73 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'setting_system_role',
               i18nKey: 'route.setting_system_role'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'warehouse',
+    path: '/warehouse',
+    component: 'layout.base',
+    meta: {
+      title: 'warehouse',
+      i18nKey: 'route.warehouse'
+    },
+    children: [
+      {
+        name: 'warehouse_data',
+        path: '/warehouse/data',
+        meta: {
+          title: 'warehouse_data',
+          i18nKey: 'route.warehouse_data'
+        },
+        children: [
+          {
+            name: 'warehouse_data_material',
+            path: '/warehouse/data/material',
+            component: 'view.warehouse_data_material',
+            meta: {
+              title: 'warehouse_data_material',
+              i18nKey: 'route.warehouse_data_material'
+            }
+          },
+          {
+            name: 'warehouse_data_warehouse',
+            path: '/warehouse/data/warehouse',
+            component: 'view.warehouse_data_warehouse',
+            meta: {
+              title: 'warehouse_data_warehouse',
+              i18nKey: 'route.warehouse_data_warehouse'
+            }
+          }
+        ]
+      },
+      {
+        name: 'warehouse_funds',
+        path: '/warehouse/funds',
+        meta: {
+          title: 'warehouse_funds',
+          i18nKey: 'route.warehouse_funds'
+        },
+        children: [
+          {
+            name: 'warehouse_funds_payment-order',
+            path: '/warehouse/funds/payment-order',
+            component: 'view.warehouse_funds_payment-order',
+            meta: {
+              title: 'warehouse_funds_payment-order',
+              i18nKey: 'route.warehouse_funds_payment-order'
+            }
+          },
+          {
+            name: 'warehouse_funds_receiving-order',
+            path: '/warehouse/funds/receiving-order',
+            component: 'view.warehouse_funds_receiving-order',
+            meta: {
+              title: 'warehouse_funds_receiving-order',
+              i18nKey: 'route.warehouse_funds_receiving-order'
             }
           }
         ]

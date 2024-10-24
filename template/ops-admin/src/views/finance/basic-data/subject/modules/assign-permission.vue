@@ -3,32 +3,20 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import {enableStatusOptions, menuTypeOptions} from '@/constants/business';
+import { menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
-import {fetchAdd, fetchEdit, fetchGetAllCompanies, fetchGetAllMenus} from '@/service/api/system/menu';
-import {
-  getLayoutAndPage,
-  getPathParamFromRoutePath,
-  getRoutePathByRouteName,
-  getRoutePathWithParam,
-  transformLayoutAndPageToComponent
-} from './shared';
-import {translateOptions} from "@/utils/common";
+import { fetchAdd, fetchEdit, fetchGetAllMenus } from '@/service/api/system/menu';
 
 defineOptions({
-  name: 'MenuOperateModal'
+  name: 'AssignPermission'
 });
 
 export type OperateType = NaiveUI.TableOperateType | 'addChild';
 
 interface Props {
   /** the type of operation */
-  operateType: OperateType;
-  /** the edit menu data or the parent menu data when adding a child menu */
-  rowData?: Setting.SystemMenu.Menu | null;
-  /** all pages */
-  allPages: string[];
+  id: number;
 }
 
 const props = defineProps<Props>();
@@ -61,7 +49,6 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    com_id: [],
     type: '1',
     title: '',
     is_hide_menu: 'N',
@@ -76,6 +63,7 @@ function createDefaultModel(): Model {
 }
 
 type RuleKey = Extract<keyof Model, 'menuName' | 'status' | 'routeName' | 'routePath'>;
+
 const rules: Record<RuleKey, App.Global.FormRule> = {
   menuName: defaultRequiredRule,
   status: defaultRequiredRule,
@@ -85,37 +73,14 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 
 const disabledMenuType = computed(() => props.operateType === 'edit');
 
-// 显示菜单相关控件和显示权限相关控件
-const showMenu = computed(() => model.type === '1');
-const showPermission = computed(() => model.type === '2');
-
 
 /** 所有菜单选项 */
 const menuOptions = ref<CommonType.Option<string>[]>([]);
 async function getMenuOptions() {
-  let id = 0;
-  if (props.operateType === 'edit') {
-    id = props.rowData?.id || 0;
-  }
-  const { error, data } = await fetchGetAllMenus(id);
+  const { error, data } = await fetchGetAllMenus();
 
   if (!error) {
     menuOptions.value = data;
-  }
-}
-
-/** 所有主体选项 */
-const companyOptions = ref<CommonType.Option<string>[]>([]);
-async function getCompanyOptions() {
-  const { error, data } = await fetchGetAllCompanies();
-
-  if (!error) {
-    companyOptions.value = data.map(item => {
-      return {
-        label: item.name,
-        value: item.id
-      };
-    });
   }
 }
 
@@ -125,8 +90,9 @@ function handleInitModel() {
   if (!props.rowData) return;
 
   if (props.operateType === 'addChild') {
-    const { id, name, component } = props.rowData;
-    Object.assign(model, { pid: id, name, component });
+    const { id } = props.rowData;
+
+    Object.assign(model, { pid: id });
   }
 
   if (props.operateType === 'edit') {
@@ -154,11 +120,11 @@ function handleUpdateI18nKeyByRouteName() {
   }
 }
 
+
 async function handleSubmit() {
   await validate();
 
   const isEdit: boolean = props.operateType === 'edit';
-
   let result;
   if (isEdit) {
     result = await fetchEdit(props.rowData.id, model);
@@ -177,7 +143,6 @@ watch(visible, () => {
     handleInitModel();
     restoreValidation();
     getMenuOptions();
-    getCompanyOptions();
   }
 });
 
@@ -202,23 +167,12 @@ watch(
           </NFormItemGi>
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.pid')" path="type">
             <NTreeSelect
-              v-model:value="model.pid"
               clearable
               filterable
               key-field="id"
               label-field="title"
               :options="menuOptions"
-            />
-          </NFormItemGi>
-
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.com_id')" path="type">
-            <NSelect
-              v-model:value="model.com_id"
-              :placeholder="$t('page.manage.menu.com_id')"
-              :options="companyOptions"
-              filterable
-              multiple
-              clearable
+              :default-value="model.pid"
             />
           </NFormItemGi>
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.title')" path="title">

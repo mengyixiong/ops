@@ -61,10 +61,12 @@ declare namespace Api {
     }
 
     interface UserInfo {
-      userId: string;
-      userName: string;
+      id: string;
+      username: string;
       roles: string[];
       buttons: string[];
+      permissions: string[];
+      companies: Setting.SystemCompany.Company[];
     }
   }
 

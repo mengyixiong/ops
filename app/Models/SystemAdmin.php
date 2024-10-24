@@ -38,4 +38,12 @@ class SystemAdmin extends Authenticatable
     {
         return request()->root() . $value;
     }
+
+    /**
+     * 关联公司
+     */
+    public function companies()
+    {
+        return $this->belongsToMany(SystemCompany::class, 'system_admin_companies', 'admin_id', 'company_id');
+    }
 }

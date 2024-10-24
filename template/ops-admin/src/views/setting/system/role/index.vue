@@ -100,7 +100,7 @@ const {
               )
             }}
           </NPopconfirm>
-          <NButton type="primary" ghost size="small" onClick={() => assignPermission(row.id)}>
+          <NButton type="primary" ghost size="small" onClick={() => assignPermission(row)}>
             {$t('page.manage.role.assignPermissions')}
           </NButton>
         </div>
@@ -108,28 +108,17 @@ const {
     }
   ]
 });
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-  // closeDrawer
-} = useTableOperate(data, getData);
+
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
 
 /** 批量删除 */
 async function handleBatchDelete() {
-  // request
-
   await onBatchDeleted();
 }
 
 async function handleDelete(id: number) {
-  // request
-  const {error} = await fetchDel(id);
+  const { error } = await fetchDel(id);
   if (!error) {
     await onDeleted();
   }
@@ -139,17 +128,14 @@ function edit(id: number) {
   handleEdit(id);
 }
 
-const assignPermissionVisible = ref(false);
-const id = ref(0);
-
 /**
  * 分配权限
  *
- * @param roleId
  */
-function assignPermission(roleId: number) {
+const assignPermissionVisible = ref(false);
+function assignPermission(row: Setting.SystemRole.Role) {
   assignPermissionVisible.value = true;
-  id.value = roleId;
+  editingData.value = row;
 }
 </script>
 
@@ -188,8 +174,8 @@ function assignPermission(roleId: number) {
       />
 
       <AssignPermission
-        :id="id"
         v-model:visible="assignPermissionVisible"
+        :row-data="editingData"
       />
     </NCard>
   </div>

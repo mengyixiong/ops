@@ -50,7 +50,7 @@ function createDefaultModel(): Model {
   return {
     name: '',
     abb: '',
-    is_default: ''
+    is_default: 'N'
   };
 }
 

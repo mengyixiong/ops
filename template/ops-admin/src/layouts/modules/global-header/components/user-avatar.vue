@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { VNode } from 'vue';
-import { useAuthStore } from '@/store/modules/auth';
-import { useRouterPush } from '@/hooks/common/router';
-import { useSvgIcon } from '@/hooks/common/icon';
-import { $t } from '@/locales';
+import {computed} from 'vue';
+import type {VNode} from 'vue';
+import {useAuthStore} from '@/store/modules/auth';
+import {useRouterPush} from '@/hooks/common/router';
+import {useSvgIcon} from '@/hooks/common/icon';
+import {$t} from '@/locales';
 
 defineOptions({
   name: 'UserAvatar'
 });
 
 const authStore = useAuthStore();
-const { routerPushByKey, toLogin } = useRouterPush();
-const { SvgIconVNode } = useSvgIcon();
+const {routerPushByKey, toLogin} = useRouterPush();
+const {SvgIconVNode} = useSvgIcon();
 
 function loginOrRegister() {
   toLogin();
@@ -22,17 +22,22 @@ type DropdownKey = 'logout';
 
 type DropdownOption =
   | {
-      key: DropdownKey;
-      label: string;
-      icon?: () => VNode;
-    }
+  key: DropdownKey;
+  label: string;
+  icon?: () => VNode;
+}
   | {
-      type: 'divider';
-      key: string;
-    };
+  type: 'divider';
+  key: string;
+};
 
 const options = computed(() => {
   const opts: DropdownOption[] = [
+    {
+      label: $t('common.changeCompany'),
+      key: 'changeCompany',
+      icon: SvgIconVNode({ icon: 'uil:exchange-alt', fontSize: 18 })
+    },
     {
       label: $t('common.logout'),
       key: 'logout',
@@ -55,9 +60,24 @@ function logout() {
   });
 }
 
+function changeCompany() {
+  window.$dialog?.info({
+    title: $t('common.tip'),
+    content: $t('common.logoutConfirm'),
+    positiveText: $t('common.confirm'),
+    negativeText: $t('common.cancel'),
+    onPositiveClick: () => {
+      authStore.resetStore();
+    }
+  });
+}
+
+console.log(authStore.userInfo)
 function handleDropdown(key: DropdownKey) {
   if (key === 'logout') {
     logout();
+  } else if (key === 'changeCompany') {
+    changeCompany();
   } else {
     // If your other options are jumps from other routes, they will be directly supported here
     routerPushByKey(key);
@@ -72,8 +92,8 @@ function handleDropdown(key: DropdownKey) {
   <NDropdown v-else placement="bottom" trigger="click" :options="options" @select="handleDropdown">
     <div>
       <ButtonIcon>
-        <SvgIcon icon="ph:user-circle" class="text-icon-large" />
-        <span class="text-16px font-medium">{{ authStore.userInfo.userName }}</span>
+        <SvgIcon icon="ph:user-circle" class="text-icon-large"/>
+        <span class="text-16px font-medium">{{ authStore.userInfo.username }}</span>
       </ButtonIcon>
     </div>
   </NDropdown>

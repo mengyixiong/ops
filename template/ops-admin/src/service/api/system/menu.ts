@@ -37,9 +37,22 @@ export function fetchDel(id: number) {
 /**
  * 获取所有的菜单
  */
-export function fetchGetAllMenus() {
+export function fetchGetAllMenus(id: number) {
   return request<Setting.SystemMenu.MenuTree[]>({
     url: '/system/menu/get_all_menus',
+    method: 'get',
+    params: {
+      id
+    }
+  });
+}
+/**
+
+ * 获取所有的菜单
+ */
+export function fetchGetAllCompanies() {
+  return request<Setting.SystemCompany.Company>({
+    url: '/system/menu/get_all_companies',
     method: 'get'
   });
 }

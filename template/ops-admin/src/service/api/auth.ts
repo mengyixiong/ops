@@ -2,6 +2,16 @@ import { request } from '../request';
 
 /**
  * Login
+ */
+export function fetchLogout() {
+  return request({
+    url: '/auth/logout',
+    method: 'post'
+  });
+}
+
+/**
+ * Login
  *
  * @param username User name
  * @param password Password

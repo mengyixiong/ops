@@ -84,7 +84,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       key: 'path',
       title: $t('page.manage.menu.path'),
       align: 'center',
-      minWidth: 120
+      minWidth: 200
     },
     {
       key: 'component',
@@ -161,7 +161,6 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
   ]
 });
 const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
-const expands = ref<number[]>([]); // 展开的菜单
 const editingData: Ref<Setting.SystemMenu.Menu | null> = ref(null); // 编辑的数据
 
 function handleAdd() {
@@ -169,6 +168,9 @@ function handleAdd() {
   openModal();
 }
 
+/**
+ * 批量删除
+ */
 async function handleBatchDelete() {
   onBatchDeleted();
 }
@@ -215,7 +217,7 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1088"
+        :scroll-x="1200"
         :loading="loading"
         remote
         :pagination="pagination"

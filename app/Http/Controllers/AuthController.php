@@ -6,8 +6,8 @@ use App\Enums\GlobalConstant;
 use App\Exceptions\ApiException;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\SystemAdmin;
+use App\Models\SystemCompany;
 use App\Models\SystemMenu;
-use App\Models\SystemRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -79,6 +79,9 @@ class AuthController extends BaseController
             $permissions = $permissions->pluck('permission')->toArray();
         }
 
+        # 获取所有的公司
+        $request->user()->load('companies');
+
         return $this->succData([
             'info'        => $request->user(),
             'permissions' => $permissions
@@ -95,7 +98,10 @@ class AuthController extends BaseController
         if ($request->user()->is_super_admin == GlobalConstant::YES) {
             # 超级管理员的菜单和权限
             $menus = SystemMenu::query()
-                ->whereIn('com_id', [0, $request->user()->current_com_id])
+                ->where(function (Builder $query){
+                    $query->whereJsonLength('com_id',0)
+                        ->orWhereJsonContains('com_id', request()->user()->current_com_id);
+                })
                 ->where('type', SystemMenu::TYPE_MENU)
                 ->get();
         }

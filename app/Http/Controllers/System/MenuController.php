@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\System;
 
-use App\Enums\GlobalConstant;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\System\Menu\AddRequest;
 use App\Http\Requests\System\Menu\UpdateRequest;
+use App\Models\SystemCompany;
 use App\Models\SystemMenu;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class MenuController extends BaseController
@@ -30,23 +31,53 @@ class MenuController extends BaseController
     {
         # 获取所有的菜单
         $menus = SystemMenu::query()
-            ->whereIn('com_id', [0, $request->user()->current_com_id])
+            ->when($request->has('id'), function (Builder $query) {
+                $query->where('id', '<>', request()->id);
+            })
             ->where('type', SystemMenu::TYPE_MENU)
             ->get();
 
         # 构建菜单树
         if ($menus) {
             $menus = buildTree($menus->toArray());
-
         }
         # 在menus前面添加顶级菜单
         array_unshift($menus, [
-            'id'       => 0,
-            'title'    => '顶级菜单',
-            'pid'      => 0
+            'id'    => 0,
+            'title' => '顶级菜单',
+            'pid'   => 0
         ]);
 
         return $this->succData($menus);
+    }
+
+    public function getCompanyMenusAndPermissions()
+    {
+        $companies = SystemCompany::get();
+        foreach ($companies as $company){
+            # 获取菜单
+            $menus = SystemMenu::query()
+                ->whereJsonContains('com_id', $company->id)
+                ->where('type', SystemMenu::TYPE_MENU)
+                ->get();
+
+            # 构建菜单树
+            if ($menus) {
+                $company->menus = buildTree($menus->toArray());
+            }
+        }
+        return $this->succData($companies);
+    }
+
+    /**
+     * 列表
+     */
+    public function getAllCompanies()
+    {
+        $companies = SystemCompany::query()
+            ->get();
+
+        return $this->succData($companies);
     }
 
     /**
@@ -66,6 +97,7 @@ class MenuController extends BaseController
             'component',
             'i18n_key',
             'sort',
+            'com_id'
         ]);
         $menu       = new SystemMenu($insertData);
         $menu->save();
@@ -97,6 +129,7 @@ class MenuController extends BaseController
             'component',
             'i18n_key',
             'sort',
+            'com_id'
         ]);
 
         $menu->update($updateData);

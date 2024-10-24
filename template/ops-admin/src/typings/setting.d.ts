@@ -84,6 +84,8 @@ declare namespace Setting {
     type IconType = '1' | '2';
 
     type Menu = Common.CommonRecord<{
+      /** 主体id集合 */
+      com_id: number[];
       /** 是否隐藏菜单 */
       is_hide_menu: boolean;
       /** parent menu id */
@@ -123,5 +125,9 @@ declare namespace Setting {
 
     /** user search params */
     type SearchParams = Partial<Pick<Menu, 'name'> & Api.Common.CommonSearchParams>;
+
+    type AssignPermission = {
+      menus: number[];
+    };
   }
 }

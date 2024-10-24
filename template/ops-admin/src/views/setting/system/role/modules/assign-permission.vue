@@ -7,6 +7,7 @@ import { menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
 import { fetchAdd, fetchEdit, fetchGetAllMenus } from '@/service/api/system/menu';
+import CustomTree from "@/views/setting/system/role/modules/custom-tree.vue";
 
 defineOptions({
   name: 'AssignPermission'
@@ -15,55 +16,42 @@ defineOptions({
 export type OperateType = NaiveUI.TableOperateType | 'addChild';
 
 interface Props {
-  /** the type of operation */
-  id: number;
+  /** the edit row data */
+  rowData?: Setting.SystemRole.Role | null;
 }
-
 const props = defineProps<Props>();
 
+/** 事件 */
 interface Emits {
   (e: 'submitted'): void;
 }
-
 const emit = defineEmits<Emits>();
 
+/** 弹窗可见性 */
 const visible = defineModel<boolean>('visible', {
   default: false
 });
-
-const { formRef, validate, restoreValidation } = useNaiveForm();
-const { defaultRequiredRule } = useFormRules();
-
-const title = computed(() => {
-  const titles: Record<OperateType, string> = {
-    add: $t('page.manage.menu.add'),
-    addChild: $t('page.manage.menu.add'),
-    edit: $t('page.manage.menu.edit')
-  };
-  return titles[props.operateType];
-});
-
-type Model = Setting.SystemMenu.Form;
-
-const model: Model = reactive(createDefaultModel());
-
-function createDefaultModel(): Model {
-  return {
-    type: '1',
-    title: '',
-    is_hide_menu: 'N',
-    name: '',
-    pid: 0,
-    path: '',
-    icon: '',
-    permission: '',
-    component: '',
-    i18n_key: ''
-  };
+function closeDrawer() {
+  visible.value = false;
 }
 
-type RuleKey = Extract<keyof Model, 'menuName' | 'status' | 'routeName' | 'routePath'>;
+const { formRef, validate, restoreValidation } = useNaiveForm();
 
+/** 模型数据 */
+type Model = Setting.SystemMenu.AssignPermission;
+const model: Model = reactive(createDefaultModel());
+function createDefaultModel(): Model {
+  return {
+    menus: []
+  };
+}
+function handleInitModel() {
+  Object.assign(model, createDefaultModel());
+}
+
+/** 表单规则 */
+const { defaultRequiredRule } = useFormRules();
+type RuleKey = Extract<keyof Model, 'menuName' | 'status' | 'routeName' | 'routePath'>;
 const rules: Record<RuleKey, App.Global.FormRule> = {
   menuName: defaultRequiredRule,
   status: defaultRequiredRule,
@@ -71,72 +59,30 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   routePath: defaultRequiredRule
 };
 
-const disabledMenuType = computed(() => props.operateType === 'edit');
-
-
 /** 所有菜单选项 */
 const menuOptions = ref<CommonType.Option<string>[]>([]);
 async function getMenuOptions() {
   const { error, data } = await fetchGetAllMenus();
 
   if (!error) {
+    data.shift();
+    console.log(data);
     menuOptions.value = data;
   }
 }
 
-function handleInitModel() {
-  Object.assign(model, createDefaultModel());
-
-  if (!props.rowData) return;
-
-  if (props.operateType === 'addChild') {
-    const { id } = props.rowData;
-
-    Object.assign(model, { pid: id });
-  }
-
-  if (props.operateType === 'edit') {
-    Object.assign(model, props.rowData);
-  }
-}
-
-function closeDrawer() {
-  visible.value = false;
-}
-
-function handleUpdateRoutePathByRouteName() {
-  if (model.name) {
-    model.path = getRoutePathByRouteName(model.name);
-  } else {
-    model.path = '';
-  }
-}
-
-function handleUpdateI18nKeyByRouteName() {
-  if (model.name) {
-    model.i18n_key = `route.${model.name}` as App.I18n.I18nKey;
-  } else {
-    model.i18n_key = null;
-  }
-}
-
-
 async function handleSubmit() {
   await validate();
 
-  const isEdit: boolean = props.operateType === 'edit';
-  let result;
-  if (isEdit) {
-    result = await fetchEdit(props.rowData.id, model);
-  } else {
-    result = await fetchAdd(model);
-  }
-  if (!result?.error) {
+  const { error } = await fetchEdit(props.rowData.id, model);
+
+  if (!error) {
     window.$message?.success($t(isEdit ? 'common.updateSuccess' : 'common.addSuccess'));
     closeDrawer();
     emit('submitted');
   }
 }
+const pattern = ref('');
 
 watch(visible, () => {
   if (visible.value) {
@@ -145,76 +91,24 @@ watch(visible, () => {
     getMenuOptions();
   }
 });
-
-watch(
-  () => model.name,
-  () => {
-    handleUpdateRoutePathByRouteName();
-    handleUpdateI18nKeyByRouteName();
-  }
-);
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-800px">
+  <NModal v-model:show="visible" :title="$t('page.manage.role.assignPermissions')" preset="card" class="w-90%">
     <NScrollbar class="h-480px pr-20px">
       <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="100">
-        <NGrid responsive="screen" item-responsive>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.type')" path="type">
-            <NRadioGroup v-model:value="model.type" :disabled="disabledMenuType">
-              <NRadio v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.pid')" path="type">
-            <NTreeSelect
-              clearable
-              filterable
-              key-field="id"
-              label-field="title"
-              :options="menuOptions"
-              :default-value="model.pid"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.title')" path="title">
-            <NInput v-model:value="model.title" :placeholder="$t('page.manage.menu.form.title')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.i18n_key')" path="i18n_key">
-            <NInput v-model:value="model.i18n_key" :placeholder="$t('page.manage.menu.form.i18n_key')" />
-          </NFormItemGi>
-
-          <!-- 类型为1:菜单时 需要显示 -->
-          <template v-if="showMenu">
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.name')" path="name">
-              <NInput v-model:value="model.name" :placeholder="$t('page.manage.menu.form.name')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.path')" path="path">
-              <NInput v-model:value="model.path" disabled :placeholder="$t('page.manage.menu.form.path')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.component')" path="component">
-              <NInput v-model:value="model.component" :placeholder="$t('page.manage.menu.form.component')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.icon')" path="icon">
-              <NInput v-model:value="model.icon" :placeholder="$t('page.manage.menu.form.icon')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.is_hide_menu')" path="is_hide_menu">
-              <NRadioGroup v-model:value="model.is_hide_menu">
-                <NRadio value="Y" :label="$t('common.yesOrNo.yes')" />
-                <NRadio value="N" :label="$t('common.yesOrNo.no')" />
-              </NRadioGroup>
-            </NFormItemGi>
-
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.sort')" path="sort">
-              <NInputNumber v-model:value="model.sort" clearable />
-            </NFormItemGi>
-          </template>
-
-          <!-- 类型为2:权限时 需要显示 -->
-          <template v-if="showPermission">
-            <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.permission')" path="permission">
-              <NInput v-model:value="model.permission" :placeholder="$t('page.manage.menu.form.permission')" />
-            </NFormItemGi>
-          </template>
-        </NGrid>
+        <NCard
+          :header-style="{ padding: '6px 20px' }"
+          title="选择菜单权限"
+          :segmented="{
+            content: true,
+            footer: 'soft'
+          }"
+        >
+          <CustomTree
+            :data="menuOptions"
+          ></CustomTree>
+        </NCard>
       </NForm>
     </NScrollbar>
     <template #footer>

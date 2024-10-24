@@ -28,6 +28,8 @@ const local: App.I18n.Schema = {
     index: '序号',
     keywordSearch: '请输入关键词搜索',
     logout: '退出登录',
+    changeCompany: '切换主体',
+    logoutConfirm: '确认退出登录吗？',
     logoutConfirm: '确认退出登录吗？',
     lookForward: '敬请期待',
     modify: '修改',
@@ -250,7 +252,9 @@ const local: App.I18n.Schema = {
         id: 'Id',
         title: '菜单名称',
         pid: '上级菜单',
+        com_id: '选择主体',
         is_hide_menu: '菜单隐藏',
+        layout: '布局方式',
         name: '前端名称',
         path: '前端路径',
         icon: '菜单图标',
@@ -288,7 +292,8 @@ const local: App.I18n.Schema = {
           component: '请填写组件名称',
           i18n_key: '请填写多语言',
           sort: '请填写排序',
-          type: '请选择类型'
+          type: '请选择类型',
+          layout: '布局方式'
         }
       },
       common: {
@@ -311,7 +316,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来，{username} ！'
       },
       pwdLogin: {
         title: '密码登录',
