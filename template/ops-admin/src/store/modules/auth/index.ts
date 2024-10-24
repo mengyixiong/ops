@@ -1,27 +1,28 @@
-import {computed, reactive, ref} from 'vue';
-import {useRoute} from 'vue-router';
-import {defineStore} from 'pinia';
-import {useLoading} from '@sa/hooks';
-import {SetupStoreId} from '@/enum';
-import {useRouterPush} from '@/hooks/common/router';
-import {fetchGetUserInfo, fetchLogin, fetchLogout} from '@/service/api';
-import {localStg} from '@/utils/storage';
-import {$t} from '@/locales';
-import {useRouteStore} from '../route';
-import {useTabStore} from '../tab';
-import {clearAuthStorage, getToken} from './shared';
+import { computed, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { defineStore } from 'pinia';
+import { useLoading } from '@sa/hooks';
+import { SetupStoreId } from '@/enum';
+import { useRouterPush } from '@/hooks/common/router';
+import { fetchGetUserInfo, fetchLogin, fetchLogout } from '@/service/api';
+import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
+import { useRouteStore } from '../route';
+import { useTabStore } from '../tab';
+import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const route = useRoute();
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
-  const {toLogin, redirectFromLogin} = useRouterPush(false);
-  const {loading: loginLoading, startLoading, endLoading} = useLoading();
+  const { toLogin, redirectFromLogin } = useRouterPush(false);
+  const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
   const token = ref(getToken());
 
   const userInfo: Api.Auth.UserInfo = reactive({
     id: '',
+    nickname: '',
     username: '',
     roles: [],
     buttons: [],
@@ -31,7 +32,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   /** is super role in static route */
   const isStaticSuper = computed(() => {
-    const {VITE_AUTH_ROUTE_MODE, VITE_STATIC_SUPER_ROLE} = import.meta.env;
+    const { VITE_AUTH_ROUTE_MODE, VITE_STATIC_SUPER_ROLE } = import.meta.env;
 
     return VITE_AUTH_ROUTE_MODE === 'static' && userInfo.roles.includes(VITE_STATIC_SUPER_ROLE);
   });
@@ -43,20 +44,16 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function resetStore() {
     const authStore = useAuthStore();
 
-    const { error } = await fetchLogout();
+    clearAuthStorage();
 
-    if (!error) {
-      clearAuthStorage();
+    authStore.$reset();
 
-      authStore.$reset();
-
-      if (!route.meta.constant) {
-        await toLogin();
-      }
-
-      tabStore.cacheTabs();
-      routeStore.resetStore();
+    if (!route.meta.constant) {
+      await toLogin();
     }
+
+    tabStore.cacheTabs();
+    routeStore.resetStore();
   }
 
   /**
@@ -69,7 +66,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function login(username: string, password: string, redirect = true) {
     startLoading();
 
-    const {data: loginToken, error} = await fetchLogin(username, password);
+    const { data: loginToken, error } = await fetchLogin(username, password);
 
     if (!error) {
       const pass = await loginByToken(loginToken);
@@ -82,7 +79,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         if (routeStore.isInitAuthRoute) {
           window.$notification?.success({
             title: $t('page.login.common.loginSuccess'),
-            content: $t('page.login.common.welcomeBack', { username: userInfo.username }),
+            content: $t('page.login.common.welcomeBack', { nickname: userInfo.nickname }),
             duration: 4500
           });
         }
@@ -112,15 +109,13 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   }
 
   async function getUserInfo() {
-    const {
-      data: { info ,permissions},
-      error
-    } = await fetchGetUserInfo();
+    const { data, error } = await fetchGetUserInfo();
 
     if (!error) {
-      userInfo.permissions = permissions;
+      userInfo.permissions = data?.permissions;
+      userInfo.companies = data?.companies;
       // update store
-      Object.assign(userInfo, info);
+      Object.assign(userInfo, data.info);
 
       return true;
     }

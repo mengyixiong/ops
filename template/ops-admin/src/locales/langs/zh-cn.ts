@@ -30,7 +30,8 @@ const local: App.I18n.Schema = {
     logout: '退出登录',
     changeCompany: '切换主体',
     logoutConfirm: '确认退出登录吗？',
-    logoutConfirm: '确认退出登录吗？',
+    changeCompanyConfirm: '确认退出切换成 {name} 主体吗？',
+    changeSuccess: '切换主体成功',
     lookForward: '敬请期待',
     modify: '修改',
     modifySuccess: '修改成功',
@@ -166,6 +167,8 @@ const local: App.I18n.Schema = {
     manage: {
       user: {
         username: '用户名',
+        nickname: '昵称',
+        companies: '业务授权公司',
         password: '密码',
         is_enable: '启用',
         is_super_admin: '超级管理员',
@@ -194,6 +197,7 @@ const local: App.I18n.Schema = {
         editFailed: '编辑用户失败',
         form: {
           username: '请输入用户名',
+          nickname: '请输入昵称',
           password: '请输入密码',
           avatar: '头像',
           email: '请输入邮箱',
@@ -316,7 +320,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{username} ！'
+        welcomeBack: '欢迎回来，{nickname} ！'
       },
       pwdLogin: {
         title: '密码登录',

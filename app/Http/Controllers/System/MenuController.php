@@ -51,33 +51,13 @@ class MenuController extends BaseController
         return $this->succData($menus);
     }
 
-    public function getCompanyMenusAndPermissions()
+    public function getMenusAndPermissions()
     {
-        $companies = SystemCompany::get();
-        foreach ($companies as $company){
-            # 获取菜单
-            $menus = SystemMenu::query()
-                ->whereJsonContains('com_id', $company->id)
-                ->where('type', SystemMenu::TYPE_MENU)
-                ->get();
-
-            # 构建菜单树
-            if ($menus) {
-                $company->menus = buildTree($menus->toArray());
-            }
-        }
-        return $this->succData($companies);
-    }
-
-    /**
-     * 列表
-     */
-    public function getAllCompanies()
-    {
-        $companies = SystemCompany::query()
-            ->get();
-
-        return $this->succData($companies);
+        $menus = SystemMenu::query()->select([
+            'id','name','pid','title'
+        ])->get();
+        $menus = buildTree($menus->toArray());
+        return $this->succData($menus);
     }
 
     /**

@@ -3,6 +3,7 @@ import { computed, reactive, ref, watch } from 'vue';
 import { NButton } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { fetchAdd, fetchEdit, fetchGetAllRoles } from '@/service/api/system/admin';
+import { fetchGetAllCompanies } from '@/service/api/system/company';
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
 import { yesOrNoOptions } from '@/constants/common';
@@ -49,12 +50,14 @@ const model: Model = reactive(createDefaultModel());
 function createDefaultModel(): Model {
   return {
     avatar: '',
+    nickname: '',
     username: '',
     is_enable: 'N',
     is_super_admin: 'N',
     avatar: '',
     email: '',
     phone: '',
+    companies: [],
     roles: []
   };
 }
@@ -64,8 +67,10 @@ const { defaultRequiredRule } = useFormRules();
 type RuleKey = Extract<keyof Model, 'userName' | 'status'>;
 const rules: Record<RuleKey, App.Global.FormRule> = {
   username: defaultRequiredRule,
+  nickname: defaultRequiredRule,
   email: defaultRequiredRule,
-  roles: defaultRequiredRule
+  roles: defaultRequiredRule,
+  companies: defaultRequiredRule
 };
 
 /** 获取所有角色 */
@@ -79,6 +84,21 @@ async function getRoleOptions() {
       label: item.name,
       value: item.id
     }));
+  }
+}
+
+/** 所有主体选项 */
+const companyOptions = ref<CommonType.Option<string>[]>([]);
+async function getCompanyOptions() {
+  const { error, data } = await fetchGetAllCompanies();
+
+  if (!error) {
+    companyOptions.value = data.map(item => {
+      return {
+        label: item.name,
+        value: item.id
+      };
+    });
   }
 }
 
@@ -116,6 +136,7 @@ watch(visible, () => {
     handleInitModel();
     restoreValidation();
     getRoleOptions();
+    getCompanyOptions();
   }
 });
 
@@ -124,7 +145,6 @@ const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressE
     const resp = JSON.parse(event.target.response);
     if (resp.code === 200) {
       model.avatar = resp.data.url;
-      console.log(model)
       return file;
     }
   }
@@ -138,6 +158,9 @@ const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressE
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem :label="$t('page.manage.user.username')" path="username">
           <NInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.nickname')" path="nickname">
+          <NInput v-model:value="model.nickname" :placeholder="$t('page.manage.user.form.nickname')" />
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.avatar')" path="avatar">
           <NUpload
@@ -185,6 +208,16 @@ const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressE
             :options="roleOptions"
             :placeholder="$t('page.manage.user.form.roles')"
           />
+        </NFormItem>
+
+        <NFormItem :label="$t('page.manage.user.companies')" path="companies">
+          <NCheckbox-group v-model:value="model.companies">
+            <NGrid :y-gap="8" :cols="1">
+              <NGi v-for="item in companyOptions" :key="item.value">
+                <NCheckbox :value="item.value" :label="item.label" />
+              </NGi>
+            </NGrid>
+          </NCheckbox-group>
         </NFormItem>
       </NForm>
       <template #footer>

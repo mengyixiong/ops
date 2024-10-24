@@ -4,8 +4,9 @@
  * All setting api type
  */
 declare namespace Setting {
-  namespace SystemAdmin{
+  namespace SystemAdmin {
     type Admin = Common.CommonRecord<{
+      nickname: string;
       username: string;
       is_enable: string;
       is_super_admin: string;
@@ -19,7 +20,12 @@ declare namespace Setting {
     }>;
 
     /** 提交的主体数据 */
-    type Form = Partial<Admin> & { roles: string[] };
+    type Form = Partial<Admin> & {
+      roles: number[];
+      role_names: string[];
+      companies: number[];
+      company_names: string[];
+    };
   }
   namespace SystemRole {
     type Role = Api.Common.CommonRecord<{

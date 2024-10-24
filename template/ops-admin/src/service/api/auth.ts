@@ -56,3 +56,16 @@ export function fetchRefreshToken(refreshToken: string) {
 export function fetchCustomBackendError(code: string, msg: string) {
   return request({ url: '/auth/error', params: { code, msg } });
 }
+
+/**
+ * 切换公司
+ */
+export function fetchChangCompany(com_id: string) {
+  return request({
+    url: '/auth/change_company',
+    method: 'post',
+    data: {
+      com_id,
+    }
+  });
+}

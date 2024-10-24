@@ -79,12 +79,18 @@ class AuthController extends BaseController
             $permissions = $permissions->pluck('permission')->toArray();
         }
 
-        # 获取所有的公司
-        $request->user()->load('companies');
+        # 获取主体
+        if ($request->user()->is_super_admin == GlobalConstant::YES) {
+            $companies = SystemCompany::query()->get();
+        } else {
+            # 非超级管理员，获取当前用户的公司
+            $companies = $request->user()->companies;
+        }
 
         return $this->succData([
             'info'        => $request->user(),
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'companies' => $companies,
         ]);
     }
 
@@ -93,17 +99,39 @@ class AuthController extends BaseController
      */
     public function getUserRoutes(Request $request)
     {
-        # 获取角色和权限
-        $menus = $request->user()->roles()->with('menus')->get()->pluck('menus')->flatten()->unique('id');
+        # 判断是否是超级管理员
         if ($request->user()->is_super_admin == GlobalConstant::YES) {
-            # 超级管理员的菜单和权限
+            # 超级管理员的菜单
             $menus = SystemMenu::query()
-                ->where(function (Builder $query){
-                    $query->whereJsonLength('com_id',0)
+                ->where(function (Builder $query) {
+                    $query->whereJsonLength('com_id', 0)
                         ->orWhereJsonContains('com_id', request()->user()->current_com_id);
                 })
                 ->where('type', SystemMenu::TYPE_MENU)
                 ->get();
+        } else {
+            # 获取角色和权限
+            $menus = $request->user()->roles()
+                ->with(['menus' => function ($query) {
+                    $query->whereJsonLength('com_id', 0)->orWhereJsonContains('com_id', request()->user()->current_com_id);
+                }])
+                ->get()->pluck('menus')->flatten()->unique('id');
+
+            # 查询父级菜单
+            $menusToAdd = collect();
+            foreach ($menus as $menu) {
+                $menusToAdd->push($menu);
+
+                # 将此菜单的所有父级菜单添加到集合中
+                $parent = $menu->parent;
+                while ($parent !== null) {
+                    $menusToAdd->push($parent);
+                    $parent = $parent->parent;
+                }
+            }
+
+            # 菜单去重
+            $menus = $menusToAdd->unique('id');
         }
 
         # 构建菜单树
@@ -112,7 +140,7 @@ class AuthController extends BaseController
             $menus = buildFrontRouter($menus);
         }
         return $this->succData([
-            'home'        => 'home',
+            'home'   => 'home',
             'routes' => $menus
         ]);
     }
@@ -134,9 +162,7 @@ class AuthController extends BaseController
             throw new ApiException('切换主体失败');
         }
 
-        return $this->succData(
-            $this->changeTheToken()
-        );
+        return $this->succOk();
     }
 
     /**

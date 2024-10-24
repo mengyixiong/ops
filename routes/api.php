@@ -15,7 +15,7 @@ Route::group([
 ], function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::middleware(['auth:sanctum', 'permission'])->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::apiResource('/admin', AdminController::class);
 
         # 主体
+        Route::get('/company/get_all_companies', [CompanyController::class, 'getAllCompanies'])->name('role.get-all-companies');
         Route::apiResource('/company', CompanyController::class);
 
         # 角色
@@ -53,12 +54,10 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::apiResource('/role', RoleController::class);
 
         # 菜单/权限
-        Route::get('/menu/get_company_menus_and_permissions', [MenuController::class, 'getCompanyMenusAndPermissions'])->name('role.get-company-menus-and-permissions');
+        Route::get('/menu/get_menus_and_permissions', [MenuController::class, 'getMenusAndPermissions'])->name('role.get-menus-and-permissions');
         Route::get('/menu/get_all_menus', [MenuController::class, 'getAllMenus'])->name('role.get-all-menus');
-        Route::get('/menu/get_all_companies', [MenuController::class, 'getAllCompanies'])->name('role.get-all-companies');
         Route::apiResource('/menu', MenuController::class);
     });
-
 });
 
 

@@ -114,6 +114,7 @@ export function useRouterPush(inSetup = true) {
     routerPushByKey,
     routerPushByKeyWithMetaQuery,
     toLogin,
+    toHome,
     toggleLoginModule,
     redirectFromLogin
   };

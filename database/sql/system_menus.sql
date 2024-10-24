@@ -45,6 +45,12 @@ INSERT INTO `ops`.`system_menus` (`id`, `pid`, `title`, `sort`, `i18n_key`, `is_
 -- ----------------------------
 INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (2, 2);
 INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (2, 3);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (3, 3);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (3, 5);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (4, 2);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (5, 3);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (6, 4);
+INSERT INTO `ops`.`system_admin_roles` (`admin_id`, `role_id`) VALUES (7, 2);
 
 -- ----------------------------
 -- Records of system_role_menus
@@ -73,6 +79,27 @@ INSERT INTO `ops`.`system_role_menus` (`role_id`, `menu_id`) VALUES (2, 21);
 INSERT INTO `ops`.`system_role_menus` (`role_id`, `menu_id`) VALUES (2, 22);
 INSERT INTO `ops`.`system_role_menus` (`role_id`, `menu_id`) VALUES (2, 23);
 INSERT INTO `ops`.`system_role_menus` (`role_id`, `menu_id`) VALUES (2, 24);
+
+
+-- ----------------------------
+-- Records of system_companies
+-- ----------------------------
+INSERT INTO `ops`.`system_companies` (`id`, `name`, `is_default`, `abb`, `created_at`, `updated_at`) VALUES (1, '深圳市瑞秋国际物流有限公司', 'Y', '瑞秋物流', '2024-10-24 21:01:42', '2024-10-24 21:07:49');
+INSERT INTO `ops`.`system_companies` (`id`, `name`, `is_default`, `abb`, `created_at`, `updated_at`) VALUES (2, '深圳市佰亿龙供应链管理有限公司', 'N', '佰亿龙', '2024-10-24 21:08:10', '2024-10-24 21:08:10');
+INSERT INTO `ops`.`system_companies` (`id`, `name`, `is_default`, `abb`, `created_at`, `updated_at`) VALUES (3, '深圳市芯仓科技有限公司', 'N', '芯仓科技', '2024-10-24 21:08:30', '2024-10-24 21:08:30');
+
+
+-- ----------------------------
+-- Records of system_admin_companies
+-- ----------------------------
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (3, 2);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (3, 1);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (4, 1);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (4, 2);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (4, 3);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (5, 1);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (6, 2);
+INSERT INTO `ops`.`system_admin_companies` (`admin_id`, `company_id`) VALUES (7, 3);
 
 
 

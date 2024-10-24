@@ -46,13 +46,13 @@ export function fetchGetAllMenus(id: number) {
     }
   });
 }
-/**
 
- * 获取所有的菜单
+/**
+ * 获取所有的菜单和权限
  */
-export function fetchGetAllCompanies() {
-  return request<Setting.SystemCompany.Company>({
-    url: '/system/menu/get_all_companies',
+export function fetchGetAllMenusAndPermissions() {
+  return request<Setting.SystemMenu.MenuTree[]>({
+    url: '/system/menu/get_menus_and_permissions',
     method: 'get'
   });
 }

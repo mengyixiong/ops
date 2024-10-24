@@ -12,6 +12,7 @@ class AddRequest extends BaseRequest
     {
         return [
             'username' => 'required|between:2,20|unique:system_admins,username',
+            'nickname' => 'required',
             'password' => 'sometimes|between:6,20',
             'email'    => 'required|email|unique:system_admins,email',
             'roles'    => 'required|array|exists:system_roles,id'
@@ -24,6 +25,7 @@ class AddRequest extends BaseRequest
             'username.required' => '用户名不能为空',
             'username.between'  => '用户名在6-20位之间',
             'username.unique'   => '用户名已存在',
+            'nickname.required' => '用户名不能为空',
             'password.between'  => '密码位数在6-20位之间',
             'email.required'    => '邮箱不能为空',
             'email.email'       => '邮箱格式不正确',

@@ -25,14 +25,13 @@ class CompanyController extends BaseController
             ->when(!empty($request->is_default), function ($query) use ($request) {
                 $query->where('is_default', $request->is_default);
             })
-
             ->paginate($request->get('limit', 15));
         return $this->succPage($data);
     }
 
     public function store(AddRequest $request)
     {
-        $insertData = $request->only(['name', 'abb','is_default']);
+        $insertData = $request->only(['name', 'abb', 'is_default']);
         SystemCompany::create($insertData);
         return $this->succOk('添加成功');
     }
@@ -44,7 +43,7 @@ class CompanyController extends BaseController
 
     public function update(UpdateRequest $request, SystemCompany $company)
     {
-        $updateData = $request->only(['name', 'abb','is_default']);
+        $updateData = $request->only(['name', 'abb', 'is_default']);
         $company->update($updateData);
         return $this->succOk('更新成功');
     }
@@ -53,5 +52,10 @@ class CompanyController extends BaseController
     {
         $company->delete();
         return $this->succOk();
+    }
+
+    public function getAllCompanies()
+    {
+        return $this->succData(SystemCompany::get());
     }
 }

@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('system_admins', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 20)->comment('管理员名称')->unique();
+            $table->string('username', 30)->comment('用户名')->unique();
+            $table->string('nickname', 50)->comment('昵称')->unique();
             $table->string('password', 100)->comment('管理员密码');
             $table->enum('is_enable', ['Y', 'N'])->default('Y')->comment('是否启用,Y是,N否');
             $table->enum('is_super_admin', ['Y', 'N'])->default('N')->comment('是否超级管理员,Y是,N否');

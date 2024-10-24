@@ -1,10 +1,10 @@
 <script setup lang="tsx">
-import {NButton, NPopconfirm, NTag} from 'naive-ui';
-import {fetchDel, fetchGetUserList} from '@/service/api/system/admin';
-import {$t} from '@/locales';
-import {useAppStore} from '@/store/modules/app';
-import {YesOrNoRecord} from '@/constants/business';
-import {useTable, useTableOperate} from '@/hooks/common/table';
+import { NButton, NPopconfirm, NTag } from 'naive-ui';
+import { fetchDel, fetchGetUserList } from '@/service/api/system/admin';
+import { $t } from '@/locales';
+import { useAppStore } from '@/store/modules/app';
+import { YesOrNoRecord } from '@/constants/business';
+import { useTable, useTableOperate } from '@/hooks/common/table';
 import AvatarImg from '@/views/_builtin/avatar/index.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
@@ -73,8 +73,23 @@ const {
       width: 64
     },
     {
+      key: 'avatar',
+      title: $t('page.manage.user.avatar'),
+      align: 'center',
+      width: 60,
+      render: row => {
+        return <AvatarImg width={40} src={row.avatar} />;
+      }
+    },
+    {
       key: 'username',
       title: $t('page.manage.user.username'),
+      align: 'center',
+      minWidth: 100
+    },
+    {
+      key: 'nickname',
+      title: $t('page.manage.user.nickname'),
       align: 'center',
       minWidth: 100
     },
@@ -120,6 +135,28 @@ const {
           </NSpace>
         );
       }
+    },{
+      key: 'companies',
+      title: $t('page.manage.user.companies'),
+      align: 'center',
+      width: 250,
+      ellipsis: {
+        tooltip: true
+      },
+      render: row => {
+        if (row.company_names === null) {
+          return null;
+        }
+        return (
+          <NSpace>
+            {row.company_names.map((tag, index) => (
+              <NTag key={index} type="info">
+                {tag}
+              </NTag>
+            ))}
+          </NSpace>
+        );
+      }
     },
     {
       key: 'is_super_admin',
@@ -148,24 +185,11 @@ const {
       minWidth: 100
     },
     {
-      key: 'avatar',
-      title: $t('page.manage.user.avatar'),
-      align: 'center',
-      width: 120,
-      render: row => {
-        return <AvatarImg width={40} src={row.avatar} />;
-      }
-    },
-    {
       key: 'email',
-      title:
-        $t('page.manage.user.email'),
-      align:
-        'center',
-      minWidth
-:
-  200
-},
+      title: $t('page.manage.user.email'),
+      align: 'center',
+      minWidth: 200
+    },
     {
       key: 'phone',
       title: $t('page.manage.user.phone'),
@@ -219,7 +243,7 @@ async function handleBatchDelete() {
 
 async function handleDelete(id: number) {
   // request
-  const {error} = await fetchDel(id);
+  const { error } = await fetchDel(id);
   if (!error) {
     await onDeleted();
   }
@@ -228,13 +252,11 @@ async function handleDelete(id: number) {
 function edit(id: number) {
   handleEdit(id);
 }
-
-
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage"/>
+    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation

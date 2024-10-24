@@ -227,7 +227,6 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
         v-model:visible="visible"
         :operate-type="operateType"
         :row-data="editingData"
-        :all-pages="[]"
         @submitted="getDataByPage"
       />
     </NCard>

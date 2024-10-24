@@ -23,6 +23,7 @@ class AdminController extends BaseController
     {
         $data = SystemAdmin::query()
             ->with('roles') // 只选择 roles 关联的 id 字段
+            ->with('companies') // 只选择 companies 关联的 id 字段
             ->leftJoin('system_companies as b', 'system_admins.current_com_id', '=', 'b.id')
             # 用户名查询
             ->when(!empty($request->username), function ($query) use ($request) {
@@ -33,16 +34,21 @@ class AdminController extends BaseController
             ->when(!empty($request->is_enable), function ($query) use ($request) {
                 $query->where('is_enable', $request->is_enable);
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->select(['system_admins.*', 'b.name as current_com_name'])
             ->paginate($request->get('limit', 15));
 
         # 现在处理每个用户，将角色 IDs 提取为一个数组
         $transformedCollection = $data->getCollection()->transform(function ($user) {
-            $user->role_names = $user->roles->pluck('name');
             # 提取角色ID并重新赋值
+            $user->role_names = $user->roles->pluck('name');
             $user->roles = $user->roles->pluck('id')->toArray();
             $user->setRelation('roles', $user->roles);
+
+            # 提取主体ID并重新赋值
+            $user->company_names = $user->companies->pluck('name');
+            $user->companies = $user->companies->pluck('id')->toArray();
+            $user->setRelation('companies', $user->companies);
             return $user;
         });
 
@@ -62,6 +68,7 @@ class AdminController extends BaseController
             # 添加用户
             $insertData                   = $request->only([
                 'username',
+                'nickname',
                 'password',
                 'is_enable',
                 'is_super_admin',
@@ -79,6 +86,9 @@ class AdminController extends BaseController
 
             # 添加管理员角色关系
             $admin->roles()->attach($request->roles);
+
+            # 添加主体授权关系
+            $admin->companies()->attach($request->companies);
 
             DB::commit();
             return $this->succOk();
@@ -108,6 +118,7 @@ class AdminController extends BaseController
         try {
             $updateData             = $request->only([
                 'username',
+                'nickname',
                 'password',
                 'is_enable',
                 'is_super_admin',
@@ -126,6 +137,9 @@ class AdminController extends BaseController
 
             # 更新管理员角色关系
             $admin->roles()->sync($request->roles);
+
+            # 更新主体授权关系
+            $admin->companies()->sync($request->companies);
 
             DB::commit();
             return $this->succOk($res);

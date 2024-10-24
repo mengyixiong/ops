@@ -33,3 +33,13 @@ export function fetchDel(id: number) {
     method: 'delete'
   });
 }
+
+/**
+ * 获取所有的主体
+ */
+export function fetchGetAllCompanies() {
+  return request<Setting.SystemCompany.Company>({
+    url: '/system/company/get_all_companies',
+    method: 'get'
+  });
+}

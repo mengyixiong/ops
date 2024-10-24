@@ -1,12 +1,8 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
-import type { SelectOption } from 'naive-ui';
+import {  reactive, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { menuTypeOptions } from '@/constants/business';
-import SvgIcon from '@/components/custom/svg-icon.vue';
-import { getLocalIcons } from '@/utils/icon';
-import { fetchAdd, fetchEdit, fetchGetAllMenus } from '@/service/api/system/menu';
+import {fetchEdit, fetchGetAllMenus, fetchGetAllMenusAndPermissions} from '@/service/api/system/menu';
 import CustomTree from "@/views/setting/system/role/modules/custom-tree.vue";
 
 defineOptions({
@@ -62,11 +58,9 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 /** 所有菜单选项 */
 const menuOptions = ref<CommonType.Option<string>[]>([]);
 async function getMenuOptions() {
-  const { error, data } = await fetchGetAllMenus();
+  const { error, data } = await fetchGetAllMenusAndPermissions();
 
   if (!error) {
-    data.shift();
-    console.log(data);
     menuOptions.value = data;
   }
 }
@@ -82,7 +76,6 @@ async function handleSubmit() {
     emit('submitted');
   }
 }
-const pattern = ref('');
 
 watch(visible, () => {
   if (visible.value) {
@@ -94,22 +87,11 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="$t('page.manage.role.assignPermissions')" preset="card" class="w-90%">
+  <NModal v-model:show="visible" :title="$t('page.manage.role.assignPermissions')" preset="card" class="w-60%">
     <NScrollbar class="h-480px pr-20px">
-      <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="100">
-        <NCard
-          :header-style="{ padding: '6px 20px' }"
-          title="选择菜单权限"
-          :segmented="{
-            content: true,
-            footer: 'soft'
-          }"
-        >
-          <CustomTree
-            :data="menuOptions"
-          ></CustomTree>
-        </NCard>
-      </NForm>
+      <CustomTree
+        :data="menuOptions"
+      ></CustomTree>
     </NScrollbar>
     <template #footer>
       <NSpace justify="end" :size="16">

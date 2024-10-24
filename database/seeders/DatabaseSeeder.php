@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             SystemAdminSeeder::class,
             SystemRoleSeeder::class,
             SystemMenuSeeder::class,
-            SystemCompanySeeder::class
         ]);
     }
 }
