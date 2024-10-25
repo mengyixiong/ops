@@ -54,7 +54,7 @@ class MenuController extends BaseController
     public function getMenusAndPermissions()
     {
         $menus = SystemMenu::query()->select([
-            'id','name','pid','title'
+            'id as key','id','name','pid','title'
         ])->get();
         $menus = buildTree($menus->toArray());
         return $this->succData($menus);
@@ -137,8 +137,7 @@ class MenuController extends BaseController
         if ($menu->children()->count()) {
             throw new ApiException('请先删除子菜单', 400);
         }
-
-        $menu->delete();
+        $menu->forceDelete();
         return $this->succOk();
     }
 }

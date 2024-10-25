@@ -19,8 +19,15 @@ class RoleController extends BaseController
      */
     public function index(Request $request)
     {
+        # 查询所有角色的菜单
+        $roleMenus = DB::table('system_role_menus')
+            ->selectRaw('role_id, GROUP_CONCAT(menu_id) as menu_ids')
+            ->groupBy('role_id')
+            ->get()
+            ->pluck('menu_ids', 'role_id'); // 将 role_id 作为键，menu_ids 作为值
+
         $data = SystemRole::query()
-            ->with('menus')
+            ->with('mensAndPermissions')
             # 名称查询
             ->when(!empty($request->name), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
@@ -33,15 +40,15 @@ class RoleController extends BaseController
             ->paginate($request->get('limit', 15));
 
         # 现在处理每个用户，将角色 IDs 提取为一个数组
-        $transformedCollection = $data->getCollection()->transform(function ($role) {
+        $transformedCollection = $data->getCollection()->transform(function ($role) use ($roleMenus){
+            $checked= explode(',',$roleMenus[$role->id] ?? '');
+            $menus =  SystemMenu::with('children')->whereIn('id',$checked)->get();
             # 提取角色ID并重新赋值
-            $role->menus = $role->menus->pluck('id')->toArray();
-            $role->setRelation('menus', $role->menus);
-
+            $role->menus = extractTheSubmenuIDOfTheMenuIds($menus,$checked);
             return $role;
         });
 
-        // 将修改后的集合重新设置回分页对象
+        # 将修改后的集合重新设置回分页对象
         $data->setCollection($transformedCollection);
 
         return $this->succPage($data);

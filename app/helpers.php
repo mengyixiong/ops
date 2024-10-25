@@ -78,3 +78,42 @@ if (!function_exists('getUri')) {
         return parse_url($url, PHP_URL_PATH);
     }
 }
+
+if (!function_exists('extractTheIDsOfTheSubordinates')){
+    function extractTheIDsOfTheSubordinates($node)
+    {
+        $ids = [];
+        foreach ($node ->children as $child){
+            $ids[] = $child ->id;
+            if ($child ->children){
+                $ids = array_merge($ids,extractTheIDsOfTheSubordinates($child));
+            }
+        }
+return $ids;
+    }
+}
+
+/**
+ * 排除没有全部选中下级的菜单
+ */
+if (!function_exists('extractTheSubmenuIDOfTheMenuIds')){
+    function extractTheSubmenuIDOfTheMenuIds($menus,$checked)
+    {
+        foreach ($menus as $menu){
+            // 提取所有下级菜单的ID
+            $childrenIds = extractTheIDsOfTheSubordinates($menu);
+            if (!empty($childrenIds)){
+                // 判断$childrenIds是否全部在$checked里面
+                if (count(array_diff($childrenIds, $checked)) > 0){
+                    $checked = array_filter($checked, function ($value) use ($menu){
+                        return $menu->id != $value;
+                    });
+                }
+            }
+        }
+        return array_map(function ($value){
+            return (int)$value;
+        }
+        ,$checked);
+    }
+}

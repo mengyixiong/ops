@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { h, ref, watch } from 'vue';
+import { useTool } from '@/hooks/common/tool';
+const { extractIdsFromTree } = useTool();
 
 defineOptions({
   name: 'CustomTree'
@@ -23,31 +25,15 @@ const pattern = ref('');
 const showLine = ref(false);
 const isAll = ref(false);
 
-function getAllIds(tree) {
-  const ids = [];
-
-  function traverse(node) {
-    ids.push(node.id); // 获取当前节点的 id
-
-    // 如果有子节点，递归遍历子节点
-    if (node.children && node.children.length > 0) {
-      node.children.forEach(child => traverse(child));
-    }
-  }
-
-  // 遍历树的每一个根节点
-  tree.forEach(node => traverse(node));
-
-  return ids;
-}
 
 watch(isAll, () => {
   if (isAll.value) {
-    checked.value = getAllIds(props.data);
+    checked.value = extractIdsFromTree(props.data);
   } else {
     checked.value = [];
   }
 });
+console.log(checked)
 </script>
 
 <template>
@@ -75,8 +61,8 @@ watch(isAll, () => {
       block-line
       :data="props.data"
       expand-on-click
-      checkable
       cascade
+      checkable
       :show-line="showLine"
       :default-expand-all="isExpandAll"
       key-field="id"

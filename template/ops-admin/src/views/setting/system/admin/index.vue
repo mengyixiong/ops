@@ -67,30 +67,30 @@ const {
       )
     },
     {
-      key: 'index',
+      key  : 'index',
       title: $t('common.index'),
       align: 'center',
       width: 64
     },
     {
-      key: 'avatar',
-      title: $t('page.manage.user.avatar'),
-      align: 'center',
-      width: 60,
+      key   : 'avatar',
+      title : $t('page.manage.user.avatar'),
+      align : 'center',
+      width : 60,
       render: row => {
         return <AvatarImg width={40} src={row.avatar} />;
       }
     },
     {
-      key: 'username',
-      title: $t('page.manage.user.username'),
-      align: 'center',
+      key     : 'username',
+      title   : $t('page.manage.user.username'),
+      align   : 'center',
       minWidth: 100
     },
     {
-      key: 'nickname',
-      title: $t('page.manage.user.nickname'),
-      align: 'center',
+      key     : 'nickname',
+      title   : $t('page.manage.user.nickname'),
+      align   : 'center',
       minWidth: 100
     },
     {
@@ -135,7 +135,8 @@ const {
           </NSpace>
         );
       }
-    },{
+    },
+    {
       key: 'companies',
       title: $t('page.manage.user.companies'),
       align: 'center',

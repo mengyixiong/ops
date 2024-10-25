@@ -1,10 +1,13 @@
 <script setup lang="tsx">
 import { reactive, ref, watch } from 'vue';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchGetAllMenusAndPermissions } from '@/service/api/system/menu';
 import { fetchAssignPermission } from '@/service/api/system/role';
 import CustomTree from '@/views/setting/system/role/modules/custom-tree.vue';
+import { useTool } from "@/hooks/common/tool";
+const { extractIdsFromTree, findPathToNode } = useTool();
+
 
 defineOptions({
   name: 'AssignPermission'
@@ -32,6 +35,16 @@ function closeDrawer() {
   visible.value = false;
 }
 
+/** 所有菜单选项 */
+const menuOptions = ref<CommonType.Option<string>[]>([]);
+async function getMenuOptions() {
+  const { error, data } = await fetchGetAllMenusAndPermissions();
+
+  if (!error) {
+    menuOptions.value = data;
+  }
+}
+
 const { validate, restoreValidation } = useNaiveForm();
 
 /** 模型数据 */
@@ -44,18 +57,11 @@ function createDefaultModel(): Model {
 }
 function handleInitModel() {
   Object.assign(model, createDefaultModel());
-  model.menus = props.rowData?.menus || [];
+
+  model.menus = props.rowData?.menus || [1];
+  // 转换为字符串数组
 }
 
-/** 所有菜单选项 */
-const menuOptions = ref<CommonType.Option<string>[]>([]);
-async function getMenuOptions() {
-  const { error, data } = await fetchGetAllMenusAndPermissions();
-
-  if (!error) {
-    menuOptions.value = data;
-  }
-}
 
 async function handleSubmit() {
   await validate();
@@ -69,11 +75,12 @@ async function handleSubmit() {
   }
 }
 
-watch(visible, () => {
+
+watch(visible, async () => {
   if (visible.value) {
+    await getMenuOptions();
     handleInitModel();
     restoreValidation();
-    getMenuOptions();
   }
 });
 </script>
