@@ -1,9 +1,10 @@
 <script setup lang="tsx">
-import {  reactive, ref, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import {fetchEdit, fetchGetAllMenus, fetchGetAllMenusAndPermissions} from '@/service/api/system/menu';
-import CustomTree from "@/views/setting/system/role/modules/custom-tree.vue";
+import { fetchGetAllMenusAndPermissions } from '@/service/api/system/menu';
+import { fetchAssignPermission } from '@/service/api/system/role';
+import CustomTree from '@/views/setting/system/role/modules/custom-tree.vue';
 
 defineOptions({
   name: 'AssignPermission'
@@ -31,7 +32,7 @@ function closeDrawer() {
   visible.value = false;
 }
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 
 /** 模型数据 */
 type Model = Setting.SystemMenu.AssignPermission;
@@ -43,17 +44,8 @@ function createDefaultModel(): Model {
 }
 function handleInitModel() {
   Object.assign(model, createDefaultModel());
+  model.menus = props.rowData?.menus || [];
 }
-
-/** 表单规则 */
-const { defaultRequiredRule } = useFormRules();
-type RuleKey = Extract<keyof Model, 'menuName' | 'status' | 'routeName' | 'routePath'>;
-const rules: Record<RuleKey, App.Global.FormRule> = {
-  menuName: defaultRequiredRule,
-  status: defaultRequiredRule,
-  routeName: defaultRequiredRule,
-  routePath: defaultRequiredRule
-};
 
 /** 所有菜单选项 */
 const menuOptions = ref<CommonType.Option<string>[]>([]);
@@ -68,10 +60,10 @@ async function getMenuOptions() {
 async function handleSubmit() {
   await validate();
 
-  const { error } = await fetchEdit(props.rowData.id, model);
+  const { error } = await fetchAssignPermission(props.rowData.id, model);
 
   if (!error) {
-    window.$message?.success($t(isEdit ? 'common.updateSuccess' : 'common.addSuccess'));
+    window.$message?.success($t('page.manage.role.assignPermissionsSuccess'));
     closeDrawer();
     emit('submitted');
   }
@@ -89,9 +81,7 @@ watch(visible, () => {
 <template>
   <NModal v-model:show="visible" :title="$t('page.manage.role.assignPermissions')" preset="card" class="w-60%">
     <NScrollbar class="h-480px pr-20px">
-      <CustomTree
-        :data="menuOptions"
-      ></CustomTree>
+      <CustomTree v-model:checked="model.menus" :data="menuOptions"></CustomTree>
     </NScrollbar>
     <template #footer>
       <NSpace justify="end" :size="16">

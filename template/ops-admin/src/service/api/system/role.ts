@@ -33,3 +33,13 @@ export function fetchDel(id: number) {
     method: 'delete'
   });
 }
+/**
+ * 获取所有的菜单和权限
+ */
+export function fetchAssignPermission(id:number, data?: Setting.SystemMenu.AssignPermission) {
+  return request({
+    url: `/system/role/assign_permission/${id}`,
+    method: 'post',
+    data
+  });
+}

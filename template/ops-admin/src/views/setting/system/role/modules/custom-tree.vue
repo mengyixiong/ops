@@ -15,6 +15,9 @@ const isExpandAll = defineModel<boolean>('isExpandAll', {
   default: false
 });
 
+const checked = defineModel<number[]>('checked', {
+  default: []
+});
 
 const pattern = ref('');
 const showLine = ref(false);
@@ -37,19 +40,14 @@ function getAllIds(tree) {
 
   return ids;
 }
-const checked = ref<number[]>([]);
+
 watch(isAll, () => {
   if (isAll.value) {
     checked.value = getAllIds(props.data);
-    console.log(props.data)
   } else {
     checked.value = [];
   }
 });
-
-const test = (keys) => {
-  console.log(keys)
-}
 </script>
 
 <template>
@@ -71,7 +69,7 @@ const test = (keys) => {
       </template>
     </NInput>
     <NTree
-      :checked-keys="checked"
+      v-model:checked-keys="checked"
       :show-irrelevant-nodes="false"
       :pattern="pattern"
       block-line

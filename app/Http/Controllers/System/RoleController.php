@@ -20,6 +20,7 @@ class RoleController extends BaseController
     public function index(Request $request)
     {
         $data = SystemRole::query()
+            ->with('menus')
             # 名称查询
             ->when(!empty($request->name), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
@@ -30,6 +31,19 @@ class RoleController extends BaseController
                 $query->where('code', 'like', '%' . $request->code . '%');
             })
             ->paginate($request->get('limit', 15));
+
+        # 现在处理每个用户，将角色 IDs 提取为一个数组
+        $transformedCollection = $data->getCollection()->transform(function ($role) {
+            # 提取角色ID并重新赋值
+            $role->menus = $role->menus->pluck('id')->toArray();
+            $role->setRelation('menus', $role->menus);
+
+            return $role;
+        });
+
+        // 将修改后的集合重新设置回分页对象
+        $data->setCollection($transformedCollection);
+
         return $this->succPage($data);
     }
 
@@ -102,25 +116,20 @@ class RoleController extends BaseController
         if ($menus->count() != count($request->menus)) {
             throw new ApiException('菜单不存在');
         }
+        $requestMenus = $request->menus;
+        if (!in_array(1, $requestMenus)) {
 
-        # 查询父级菜单
-        $menusToAdd = collect();
-        foreach ($menus as $menu) {
-            $menusToAdd->push($menu);
-
-            # 将此菜单的所有父级菜单添加到集合中
-            $parent = $menu->parent;
-            while ($parent !== null) {
-                $menusToAdd->push($parent);
-                $parent = $parent->parent;
-            }
+            # 每个角色必须有首页菜单
+            array_unshift($requestMenus, 1);
         }
 
-        # 菜单去重
-        $menuIds = $menusToAdd->pluck('id')->sort()->unique();
+        if (!in_array(2, $requestMenus)) {
 
-        # 分配菜单
-        $role->menus()->sync($menuIds);
+            # 每个角色必须有首页菜单
+            array_unshift($requestMenus, 2);
+        }
+
+        $role->menus()->sync($requestMenus);
 
         return $this->succOk();
     }

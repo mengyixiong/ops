@@ -46,4 +46,9 @@ class SystemAdmin extends Authenticatable
     {
         return $this->belongsToMany(SystemCompany::class, 'system_admin_companies', 'admin_id', 'company_id');
     }
+
+    public function currentCom()
+    {
+        return $this->belongsTo(SystemCompany::class, 'current_com_id');
+    }
 }

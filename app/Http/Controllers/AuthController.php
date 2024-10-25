@@ -23,6 +23,19 @@ class AuthController extends BaseController
             throw new ApiException('用户名或密码错误');
         }
 
+        # 超级管理员不用关联公司和角色
+        if ($admin->is_super_admin == GlobalConstant::NO) {
+            # 判断是否关联公司
+            if ($admin->companies->isEmpty()) {
+                throw new ApiException('用户未关联公司');
+            }
+
+            # 判断是否关联角色
+            if ($admin->roles->isEmpty()) {
+                throw new ApiException('用户未关联角色');
+            }
+        }
+
         # 比对密码
         if (!password_verify($request->password, $admin->password)) {
             throw new ApiException('用户名或密码错误');
@@ -87,10 +100,17 @@ class AuthController extends BaseController
             $companies = $request->user()->companies;
         }
 
+        $admin = $request->user()
+            ->leftJoin('system_companies as b', 'system_admins.current_com_id', '=', 'b.id')
+            ->select(['system_admins.*', 'b.name as current_com_name', 'b.abb as current_com_abb'])
+            ->where('system_admins.id', $request->user()->id)
+            ->first();
+
+        # 获取当前登录主体名称
         return $this->succData([
-            'info'        => $request->user(),
+            'info'        => $admin,
             'permissions' => $permissions,
-            'companies' => $companies,
+            'companies'   => $companies,
         ]);
     }
 
@@ -131,7 +151,7 @@ class AuthController extends BaseController
             }
 
             # 菜单去重
-            $menus = $menusToAdd->unique('id');
+            $menus = $menusToAdd->unique('id')->sortBy('id');
         }
 
         # 构建菜单树

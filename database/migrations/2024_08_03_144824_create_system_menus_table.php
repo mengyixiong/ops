@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('title', 50)->comment('菜单名称');
             $table->tinyInteger('sort')->nullable()->comment('排序，升序');
             $table->string('i18n_key', 50)->nullable()->comment('语言包名称');
-            $table->string('is_hide_menu', 50)->nullable()->default('Y')->comment('是否菜单显示,Y:是 N:否');
+            $table->string('is_hide_menu', 50)->nullable()->comment('是否菜单显示,Y:是 N:否');
             $table->string('name', 50)->nullable()->comment('前端路由名称,type:1时必填');
             $table->string('path', 100)->nullable()->comment('菜单路径,type:1时必填');
             $table->string('component', 100)->nullable()->comment('组件名称,type:1时必填');

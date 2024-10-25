@@ -237,6 +237,7 @@ const local: App.I18n.Schema = {
         add: '新增角色',
         edit: '编辑角色',
         delete: '删除角色',
+        assignPermissionsSuccess:'分配权限成功！',
         deleteSuccess: '删除角色成功',
         confirmDelete: '确认删除角色吗？',
         deleteConfirm: '删除角色后不可恢复，确认删除吗？',

@@ -79,6 +79,13 @@ class MenuController extends BaseController
             'sort',
             'com_id'
         ]);
+        if ($request->type == SystemMenu::TYPE_PERMISSION){
+            unset($insertData['is_hide_menu']);
+            unset($insertData['name']);
+            unset($insertData['path']);
+            unset($insertData['component']);
+        }
+
         $menu       = new SystemMenu($insertData);
         $menu->save();
         return $this->succOk();
@@ -111,7 +118,12 @@ class MenuController extends BaseController
             'sort',
             'com_id'
         ]);
-
+        if ($request->type == SystemMenu::TYPE_PERMISSION){
+            unset($updateData['is_hide_menu']);
+            unset($updateData['name']);
+            unset($updateData['path']);
+            unset($updateData['component']);
+        }
         $menu->update($updateData);
         return $this->succOk();
     }
