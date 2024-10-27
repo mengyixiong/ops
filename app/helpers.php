@@ -117,3 +117,17 @@ if (!function_exists('extractTheSubmenuIDOfTheMenuIds')){
         ,$checked);
     }
 }
+
+/**
+ * 判断目录是否为空
+ */
+if (!function_exists('isDirEmpty')){
+    function isDirEmpty($dir): bool
+    {
+        if (!is_readable($dir)) return false; // 判断目录是否可读
+        $files = scandir($dir);
+        return count($files) === 2; // 仅包含 '.' 和 '..' 表示空
+    }
+}
+
+

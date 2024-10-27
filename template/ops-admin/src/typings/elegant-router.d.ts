@@ -27,6 +27,7 @@ declare module "@elegant-router/types" {
     "business_orders_sea-import": "/business/orders/sea-import";
     "finance": "/finance";
     "finance_basic-data": "/finance/basic-data";
+    "finance_basic-data_currency": "/finance/basic-data/currency";
     "finance_basic-data_stream": "/finance/basic-data/stream";
     "finance_basic-data_subject": "/finance/basic-data/subject";
     "home": "/home";
@@ -111,6 +112,7 @@ declare module "@elegant-router/types" {
     | "login"
     | "business_orders_sea-export"
     | "business_orders_sea-import"
+    | "finance_basic-data_currency"
     | "finance_basic-data_stream"
     | "finance_basic-data_subject"
     | "home"

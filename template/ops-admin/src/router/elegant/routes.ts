@@ -105,6 +105,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         },
         children: [
           {
+            name: 'finance_basic-data_currency',
+            path: '/finance/basic-data/currency',
+            component: 'view.finance_basic-data_currency',
+            meta: {
+              title: 'finance_basic-data_currency',
+              i18nKey: 'route.finance_basic-data_currency'
+            }
+          },
+          {
             name: 'finance_basic-data_stream',
             path: '/finance/basic-data/stream',
             component: 'view.finance_basic-data_stream',

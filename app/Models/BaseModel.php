@@ -20,4 +20,53 @@ class BaseModel extends Model
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
     ];
+
+    /**
+     * 查询时增加主体查询域
+     * @param $query
+     * @return void
+     */
+    public function scopeCom($query): void
+    {
+        $query->where('com_id', auth()->id());
+    }
+
+
+    /**
+     * 添加时填充公司
+     * @param int $id :主体ID
+     */
+    public function fillCom(int $id = 0): static
+    {
+        if (!$id) {
+            if (auth()->check()) {
+                $id = auth()->user()->current_com_id;
+            }
+        }
+
+        $this->fill(['com_id' => $id]);
+        return $this;
+    }
+
+    /**
+     * 添加或修改时填充操作人
+     * @param bool $isUpdate:是否是修改
+     * @return $this
+     */
+
+    public function fillOperator(bool $isUpdate = false): static
+    {
+        if (!auth()->check()) {
+            return $this;
+        }
+
+        $fill = [
+            'update_by' => auth()->id(),
+        ];
+        if (!$isUpdate) {
+            $fill['create_by'] = auth()->id();
+        }
+        $this->fill($fill);
+        return $this;
+    }
 }

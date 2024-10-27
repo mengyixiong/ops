@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Finance\CostItemController;
+use App\Http\Controllers\Finance\CurrencyController;
+use App\Http\Controllers\Finance\SubjectController;
 use App\Http\Controllers\System\CompanyController;
 use App\Http\Controllers\System\MenuController;
 use App\Http\Controllers\System\RoleController;
 use App\Http\Controllers\System\AdminController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/gen',[\App\Http\Controllers\GenerateController::class,'generate']);
 
 # 授权相关路由
 Route::group([
@@ -57,6 +62,19 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::get('/menu/get_menus_and_permissions', [MenuController::class, 'getMenusAndPermissions'])->name('role.get-menus-and-permissions');
         Route::get('/menu/get_all_menus', [MenuController::class, 'getAllMenus'])->name('role.get-all-menus');
         Route::apiResource('/menu', MenuController::class);
+    });
+
+
+    # 财务模块
+    Route::group([
+        'prefix' => 'finance',
+        'as'     => 'finance.',
+    ], function () {
+        # 会计科目
+        Route::apiResource('/subject', SubjectController::class);
+        # 币种
+        Route::apiResource('/currency', CurrencyController::class);
+        Route::apiResource('/costItem',CostItemController::class);
     });
 });
 

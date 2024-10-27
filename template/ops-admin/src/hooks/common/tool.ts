@@ -31,8 +31,17 @@ export function useTool() {
     return findNode;
   }
 
+  function assignMatchingProperties(source, target): void {
+    for (const key in target) {
+      if (key in source && key in target) {
+        target[key] = source[key];
+      }
+    }
+  }
+
   return {
     extractIdsFromTree,
-    findPathToNode
+    findPathToNode,
+    assignMatchingProperties
   };
 }

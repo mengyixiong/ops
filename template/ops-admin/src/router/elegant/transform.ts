@@ -173,6 +173,7 @@ const routeMap: RouteMap = {
   "business_orders_sea-import": "/business/orders/sea-import",
   "finance": "/finance",
   "finance_basic-data": "/finance/basic-data",
+  "finance_basic-data_currency": "/finance/basic-data/currency",
   "finance_basic-data_stream": "/finance/basic-data/stream",
   "finance_basic-data_subject": "/finance/basic-data/subject",
   "home": "/home",
