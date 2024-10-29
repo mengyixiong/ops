@@ -5,7 +5,7 @@ namespace App\Http\Controllers{namespace};
 use App\Http\Controllers\BaseController;
 use App\Http\Requests{namespace}\{baseName}\AddRequest;
 use App\Http\Requests{namespace}\{baseName}\UpdateRequest;
-use App\Logics{namespace};
+use App\Logics{namespace}\{logicName};
 use App\Models\{modelName};
 
 class {controllerName} extends BaseController

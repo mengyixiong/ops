@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('code',5)->unique()->comment('代码');
             $table->enum('is_enable',array_keys(GlobalConstant::YES_NO))->default('Y')->comment('是否启用');
             $table->string('remark')->nullable()->comment('备注');
+            $table->comment('费用项目表');
             $table->timestamps();
         });
     }

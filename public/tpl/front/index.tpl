@@ -3,7 +3,7 @@ import { NButton, NPopconfirm } from 'naive-ui';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import { fetchDel, fetchGetList } from '@/service/api/{path}/{featureName}';
+import { fetchDel, fetchGetList } from '@/service/api/{module}/{featureName}';
 import { yesOrNoRecord } from '@/constants/common';
 import OperateDrawer from './modules/operate-drawer.vue';
 import SearchForm from './modules/search-form.vue';
@@ -116,7 +116,7 @@ function edit(id: number) {
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <SearchForm v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard
-      :title="$t('page.finance.currency.page.title')"
+      :title="$t('page.{langPrefix}.page.title')"
       :bordered="false"
       size="small"
       class="sm:flex-1-hidden card-wrapper"

@@ -10,7 +10,7 @@ declare namespace Finance {
       cn_name: string;
       en_name: string;
       symbol: string;
-      is_enable: strin;
+      is_enable: string;
     }>;
 
     /** 提交的数据 */

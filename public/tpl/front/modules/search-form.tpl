@@ -15,7 +15,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Finance.FinanceCurrency.SearchParams>('model', { required: true });
+const model = defineModel<{module}.{featureName}.SearchParams>('model', { required: true });
 
 async function reset() {
   await restoreValidation();

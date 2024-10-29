@@ -14,21 +14,21 @@ use Illuminate\Support\Str;
 class GenerateBackendCodeService
 {
     # 表的所有字段
-    protected array  $columns   = [];
+    protected array $columns = [];
     # 表名
     protected string $tableName = '';
     # 模型名
     protected string $modelName = '';
     # 控制器名
-    private string   $controllerName;
+    private string $controllerName;
     # 逻辑类名
-    private string   $logicName;
+    private string $logicName;
 
     # 需要排除的字段
-    private array  $excluded             = ['id', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+    private array $excluded = ['id', 'created_by', 'created_at', 'updated_by', 'updated_at'];
 
     # 不需要生成规则的字段
-    private array  $alreadyExcludeFields = [];
+    private array $alreadyExcludeFields = [];
 
     # 路径,比如: 生成到什么目录下面
     private string $path;
@@ -38,9 +38,10 @@ class GenerateBackendCodeService
 
     # 基础命名,用来生成文件名(controller,logic) 比如 $baseNameController
     private string $baseName;
+    private string $basePath = '\app';
 
     # 添加到数据库的数据
-    private array  $record               = [
+    private array $record = [
 
     ];
 
@@ -52,13 +53,13 @@ class GenerateBackendCodeService
 
     /**
      * 删除生成的文件, 删除后可以重新生成
-     * @param $tableName:表名
+     * @param $tableName :表名
      * @throws ApiException
      */
     public function delete($tableName): static
     {
         $record = DB::table('generate_records')->where('table_name', $tableName)->first();
-        if (empty($record)){
+        if (empty($record)) {
             throw new ApiException('生成记录不存在!');
         }
 
@@ -68,14 +69,20 @@ class GenerateBackendCodeService
             'logic',
             'add_request',
             'update_request',
+            'index_vue',
+            'api_type',
+            'search_form',
+            'operate_drawer',
+            'lang_zh',
+            'service_api',
         ];
         foreach ($record as $field => $value) {
             if (in_array($field, $deleteFileFiles)) {
-                $path = app_path() . $value;
-                $dir = dirname($path);
+                $path = base_path() . $value;
+                $dir  = dirname($path);
                 if (file_exists($path)) {
                     unlink($path);
-                    if (isDirEmpty($dir)){
+                    if (isDirEmpty($dir)) {
                         rmdir($dir);
                     }
                 }
@@ -100,7 +107,7 @@ class GenerateBackendCodeService
         $this->tableName      = $params['table_name'];
         $this->modelName      = Str::of($this->tableName)->singular()->studly();
         $fullModelName        = "App\\Models\\" . $this->modelName;
-        $prefix = $params['prefix'] ?? '';
+        $prefix               = $params['prefix'] ?? '';
         $this->path           = $params['path'] ?? '';
         $this->tableName      = (new $fullModelName)->getTable();
         $this->baseName       = Str::of($this->tableName)->after($prefix)->singular()->studly();
@@ -149,7 +156,7 @@ WHERE TABLE_SCHEMA = 'ops' AND TABLE_NAME = '$this->tableName' order by ORDINAL_
         $tpl          = str_replace('{modelName}', $this->modelName, $tpl);
         $tpl          = str_replace('{controllerName}', $this->controllerName, $tpl);
         $tpl          = str_replace('{logicName}', $this->logicName, $tpl);
-        $generatePath = "\Http\Controllers{$this->baseNamespace}\\" . $this->controllerName . '.php';
+        $generatePath = $this->basePath . "\Http\Controllers{$this->baseNamespace}\\" . $this->controllerName . '.php';
 //        file_put_contents($generatePath, $tpl);
         $this->record[] = [
             'type'    => 'controller',
@@ -162,18 +169,6 @@ WHERE TABLE_SCHEMA = 'ops' AND TABLE_NAME = '$this->tableName' order by ORDINAL_
     public function initLogic()
     {
         $queries        = [
-            [
-                'field' => 'name',
-                'type'  => 'like'
-            ],
-            [
-                'field' => 'name',
-                'type'  => 'like'
-            ],
-            [
-                'field' => 'code',
-                'type'  => 'like'
-            ]
         ];
         $tpl            = file_get_contents(public_path('tpl/logic.tpl'));
         $columnFields   = $this->alreadyExcludeFields;
@@ -213,7 +208,7 @@ EOT;
         }
         $tpl = str_replace('{where}', $where, $tpl);
 
-        $generatePath = "\Logics{$this->baseNamespace}\\" . $this->logicName . '.php';
+        $generatePath = $this->basePath . "\Logics{$this->baseNamespace}\\" . $this->logicName . '.php';
 //        file_put_contents($generatePath, $tpl);
         $this->record[] = [
             'type'    => 'logic',
@@ -254,7 +249,7 @@ EOT;
         $tpl      = str_replace('{namespace}', $this->baseNamespace, $tpl);
         $tpl      = str_replace('{baseName}', $this->baseName, $tpl);
 
-        $generatePath = "\Http\Requests{$this->baseNamespace}\\{$this->baseName}\\" . 'AddRequest.php';
+        $generatePath = $this->basePath . "\Http\Requests{$this->baseNamespace}\\{$this->baseName}\\" . 'AddRequest.php';
 //        file_put_contents($generatePath, $tpl);
         $this->record[] = [
             'type'    => 'add_request',
@@ -288,7 +283,7 @@ EOT;
         $tpl      = str_replace('{namespace}', $this->baseNamespace, $tpl);
         $tpl      = str_replace('{baseName}', $this->baseName, $tpl);
 
-        $generatePath = "\Http\Requests{$this->baseNamespace}\\{$this->baseName}\\" . 'UpdateRequest.php';
+        $generatePath = $this->basePath . "\Http\Requests{$this->baseNamespace}\\{$this->baseName}\\" . 'UpdateRequest.php';
 
 //        file_put_contents($generatePath, $tpl);
         $this->record[] = [
@@ -306,7 +301,7 @@ EOT;
 
     public function generate()
     {
-
+        return $this->record;
         DB::beginTransaction();
         try {
             $data               = array_column($this->record, 'path', 'type');

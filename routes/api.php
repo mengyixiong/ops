@@ -11,7 +11,8 @@ use App\Http\Controllers\System\AdminController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/gen',[\App\Http\Controllers\GenerateController::class,'generate']);
+Route::post('/gen',[\App\Http\Controllers\GenerateController::class,'generate']);
+Route::post('/del/{table_name}',[\App\Http\Controllers\GenerateController::class,'del']);
 
 # 授权相关路由
 Route::group([
@@ -74,8 +75,16 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         Route::apiResource('/subject', SubjectController::class);
         # 币种
         Route::apiResource('/currency', CurrencyController::class);
-        Route::apiResource('/costItem',CostItemController::class);
+//        Route::apiResource('/costItem',CostItemController::class);
     });
+
+    # 工具模块
+//    Route::group([
+//        'prefix' => 'tool',
+//        'as'     => 'tool.',
+//    ], function () {
+//        Route::post('/generate',[\App\Http\Controllers\GenerateController::class,'generate']);
+//    });
 });
 
 

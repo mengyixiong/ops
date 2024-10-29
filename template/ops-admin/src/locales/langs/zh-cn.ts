@@ -1,3 +1,11 @@
+import home from './zh/home';
+import login from './zh/login';
+import manage from './zh/manage';
+import finance from './zh/finance';
+import tool from './zh/tool';
+
+
+
 const local: App.I18n.Schema = {
   system: {
     title: 'Ops 管理系统',
@@ -165,255 +173,11 @@ const local: App.I18n.Schema = {
     home: '首页'
   },
   page: {
-    finance:{
-      currency: {
-        page:{
-          title: '币种管理',
-        },
-        code: '币种名称',
-        cn_name: '中文名称',
-        en_name: '英文名称',
-        symbol: '币种符号',
-        is_enable: '启用',
-        add: '新增币种',
-        edit: '编辑币种',
-        delete: '删除币种',
-        deleteSuccess: '删除币种成功',
-        confirmDelete: '确认删除币种吗？',
-        deleteConfirm: '删除币种后不可恢复，确认删除吗？',
-        deleteSuccess: '删除币种成功',
-        deleteFailed: '删除币种失败',
-        addSuccess: '新增币种成功',
-        addFailed: '新增币种失败',
-        editSuccess: '编辑币种成功',
-        editFailed: '编辑币种失败',
-        form: {
-          code: '请输入币种名称',
-          cn_name: '请输入中文名称',
-          en_name: '请输入英文名称',
-          symbol: '请输入币种符号'
-        }
-      },
-    },
-    manage: {
-      user: {
-        username: '用户名',
-        nickname: '昵称',
-        companies: '业务授权公司',
-        password: '密码',
-        is_enable: '启用',
-        is_super_admin: '超级管理员',
-        current_com_name: '当前主体',
-        avatar: '头像',
-        email: '邮箱',
-        phone: '手机号码',
-        roles: '角色',
-        last_login_at: '最后登录时间',
-        last_login_ip: '最后登录IP',
-        created_at: '创建时间',
-        updated_at: '更新时间',
-
-        title: '用户管理',
-        add: '新增用户',
-        edit: '编辑用户',
-        delete: '删除用户',
-        deleteSuccess: '删除用户成功',
-        confirmDelete: '确认删除用户吗？',
-        deleteConfirm: '删除用户后不可恢复，确认删除吗？',
-        deleteSuccess: '删除用户成功',
-        deleteFailed: '删除用户失败',
-        addSuccess: '新增用户成功',
-        addFailed: '新增用户失败',
-        editSuccess: '编辑用户成功',
-        editFailed: '编辑用户失败',
-        form: {
-          username: '请输入用户名',
-          nickname: '请输入昵称',
-          password: '请输入密码',
-          avatar: '头像',
-          email: '请输入邮箱',
-          phone: '请输入手机号码',
-          roles: '请选择角色'
-        }
-      },
-      company: {
-        name: '主体名称',
-        is_default: '默认',
-        abb: '主体简称',
-        title: '主体管理',
-        add: '新增主体',
-        edit: '编辑主体',
-        delete: '删除主体',
-        deleteSuccess: '删除主体成功',
-        confirmDelete: '确认删除主体吗？',
-        deleteConfirm: '删除主体后不可恢复，确认删除吗？',
-        deleteSuccess: '删除主体成功',
-        deleteFailed: '删除主体失败',
-        addSuccess: '新增主体成功',
-        addFailed: '新增主体失败',
-        editSuccess: '编辑主体成功',
-        editFailed: '编辑主体失败',
-        form: {
-          name: '请输入主体名称',
-          is_default: '是否默认主体',
-          abb: '请输入主体简称'
-        }
-      },
-      role: {
-        name: '角色名称',
-        code: '角色代码',
-        description: '描述',
-        title: '角色管理',
-        assignPermissions: '分配权限',
-        add: '新增角色',
-        edit: '编辑角色',
-        delete: '删除角色',
-        assignPermissionsSuccess: '分配权限成功！',
-        deleteSuccess: '删除角色成功',
-        confirmDelete: '确认删除角色吗？',
-        deleteConfirm: '删除角色后不可恢复，确认删除吗？',
-        deleteSuccess: '删除角色成功',
-        deleteFailed: '删除角色失败',
-        addSuccess: '新增角色成功',
-        addFailed: '新增角色失败',
-        editSuccess: '编辑角色成功',
-        editFailed: '编辑角色失败',
-        form: {
-          name: '请输入角色名称',
-          code: '请输入角色代码',
-          description: '请输入角色描述'
-        }
-      },
-      menu: {
-        id: 'Id',
-        title: '菜单名称',
-        pid: '上级菜单',
-        com_id: '选择主体',
-        is_hide_menu: '菜单隐藏',
-        layout: '布局方式',
-        name: '前端名称',
-        path: '前端路径',
-        icon: '菜单图标',
-        permission: '权限码',
-        component: '组件名称',
-        i18n_key: '多语言',
-        sort: '排序',
-        type: '类型',
-        add: '新增菜单',
-        edit: '编辑菜单',
-        delete: '删除菜单',
-        addChildMenu: '添加子菜单',
-        deleteSuccess: '删除菜单成功',
-        confirmDelete: '确认删除菜单吗？',
-        deleteConfirm: '删除菜单后不可恢复，确认删除吗？',
-        deleteSuccess: '删除菜单成功',
-        deleteFailed: '删除菜单失败',
-        addSuccess: '新增菜单成功',
-        addFailed: '新增菜单失败',
-        editSuccess: '编辑菜单成功',
-        editFailed: '编辑菜单失败',
-        unfold: '展开',
-        fold: '折叠',
-        types: {
-          menu: '菜单',
-          permission: '权限'
-        },
-        form: {
-          title: '请输入菜单名称',
-          pid: '请选择上级菜单',
-          name: '请填写路由名称',
-          path: '请填写路由路径',
-          icon: '菜单图标',
-          permission: '请填写权限码',
-          component: '请填写组件名称',
-          i18n_key: '请填写多语言',
-          sort: '请填写排序',
-          type: '请选择类型',
-          layout: '布局方式'
-        }
-      },
-      common: {
-        status: {
-          yes: '启用',
-          no: '禁用'
-        }
-      }
-    },
-    login: {
-      common: {
-        loginOrRegister: '登录 / 注册',
-        userNamePlaceholder: '请输入用户名',
-        phonePlaceholder: '请输入手机号',
-        codePlaceholder: '请输入验证码',
-        passwordPlaceholder: '请输入密码',
-        confirmPasswordPlaceholder: '请再次输入密码',
-        codeLogin: '验证码登录',
-        confirm: '确定',
-        back: '返回',
-        validateSuccess: '验证成功',
-        loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{nickname} ！'
-      },
-      pwdLogin: {
-        title: '密码登录',
-        rememberMe: '记住我',
-        forgetPassword: '忘记密码？',
-        register: '注册账号',
-        otherAccountLogin: '其他账号登录',
-        otherLoginMode: '其他登录方式',
-        superAdmin: '超级管理员',
-        admin: '管理员',
-        user: '普通用户'
-      },
-      codeLogin: {
-        title: '验证码登录',
-        getCode: '获取验证码',
-        reGetCode: '{time}秒后重新获取',
-        sendCodeSuccess: '验证码发送成功',
-        imageCodePlaceholder: '请输入图片验证码'
-      },
-      register: {
-        title: '注册账号',
-        agreement: '我已经仔细阅读并接受',
-        protocol: '《用户协议》',
-        policy: '《隐私权政策》'
-      },
-      resetPwd: {
-        title: '重置密码'
-      },
-      bindWeChat: {
-        title: '绑定微信'
-      }
-    },
-    home: {
-      branchDesc:
-        '为了方便大家开发和更新合并，我们对main分支的代码进行了精简，只保留了首页菜单，其余内容已移至example分支进行维护。预览地址显示的内容即为example分支的内容。',
-      greeting: '早安，{userName}, 今天又是充满活力的一天!',
-      weatherDesc: '今日多云转晴，20℃ - 25℃!',
-      projectCount: '项目数',
-      todo: '待办',
-      message: '消息',
-      downloadCount: '下载量',
-      registerCount: '注册量',
-      schedule: '作息安排',
-      study: '学习',
-      work: '工作',
-      rest: '休息',
-      entertainment: '娱乐',
-      visitCount: '访问量',
-      turnover: '成交额',
-      dealCount: '成交量',
-      projectNews: {
-        title: '项目动态',
-        moreNews: '更多动态',
-        desc1: 'Soybean 在2021年5月28日创建了开源项目 soybean-admin!',
-        desc2: 'Yanbowe 向 soybean-admin 提交了一个bug，多标签栏不会自适应。',
-        desc3: 'Soybean 准备为 soybean-admin 的发布做充分的准备工作!',
-        desc4: 'Soybean 正在忙于为soybean-admin写项目说明文档！',
-        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！'
-      },
-      creativity: '创意'
-    }
+    home,
+    login,
+    manage,
+    finance,
+    tool
   },
   form: {
     required: '不能为空',
@@ -465,5 +229,5 @@ const local: App.I18n.Schema = {
     itemCount: '共 {total} 条'
   }
 };
-
+console.log(local)
 export default local;

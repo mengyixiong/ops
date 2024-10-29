@@ -13,7 +13,7 @@ interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: Finance.FinanceCurrency.Currency | null;
+  rowData?: {studlyModule}.{featureName}.Item | null;
 }
 
 const props = defineProps<Props>();
@@ -33,34 +33,27 @@ const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: $t('page.finance.currency.add'),
-    edit: $t('page.finance.currency.edit')
+    add: $t('page.{module}.{featureName}.add'),
+    edit: $t('page.{module}.{featureName}.edit')
   };
   return titles[props.operateType];
 });
 
 // 提交的模型
-type Model = Omit<Setting.SystemCompany.Form, keyof Api.Common.CommonRecord>;
+type Model = Omit<{studlyModule}.{featureName}.Form, keyof Api.Common.CommonRecord>;
 const model: Model = reactive(createDefaultModel());
 
 /** 创建表单数据 */
 function createDefaultModel(): Model {
   return {
-    code: '',
-    cn_name: '',
-    en_name: '',
-    symbol: '',
-    is_enable: 'Y'
+{formColumns}
   };
 }
 
 // 验证规则
-type RuleKey = Extract<keyof Model, 'name' | 'is_default'>;
+type RuleKey = Extract<keyof Model, {validateFields}>;
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  code: defaultRequiredRule,
-  cn_name: defaultRequiredRule,
-  en_name: defaultRequiredRule,
-  symbol: defaultRequiredRule
+{validateFieldsRule}
 };
 
 function handleInitModel() {
@@ -104,24 +97,7 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" display-directive="show" :width="360">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem :label="$t('page.finance.currency.code')" path="code">
-          <NInput v-model:value="model.code" :placeholder="$t('page.finance.currency.form.code')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.finance.currency.cn_name')" path="cn_name">
-          <NInput v-model:value="model.cn_name" :placeholder="$t('page.finance.currency.form.cn_name')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.finance.currency.en_name')" path="en_name">
-          <NInput v-model:value="model.en_name" :placeholder="$t('page.finance.currency.form.en_name')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.finance.currency.symbol')" path="symbol">
-          <NInput v-model:value="model.symbol" :placeholder="$t('page.finance.currency.form.symbol')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.finance.currency.is_enable')" path="is_enable">
-          <NSwitch v-model:value="model.is_enable" checked-value="Y" unchecked-value="N">
-            <template #checked>启用</template>
-            <template #unchecked>禁用</template>
-          </NSwitch>
-        </NFormItem>
+{formItems}
       </NForm>
       <template #footer>
         <NSpace :size="16">
