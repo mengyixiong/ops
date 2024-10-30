@@ -153,6 +153,7 @@ WHERE TABLE_SCHEMA = 'ops' AND TABLE_NAME = '$this->tableName' order by ORDINAL_
         $tpl          = file_get_contents(public_path('tpl/controller.tpl'));
         $tpl          = str_replace('{namespace}', $this->baseNamespace, $tpl);
         $tpl          = str_replace('{baseName}', $this->baseName, $tpl);
+        $tpl          = str_replace('{varName}', Str::of($this->baseName)->camel()->toString(), $tpl);
         $tpl          = str_replace('{modelName}', $this->modelName, $tpl);
         $tpl          = str_replace('{controllerName}', $this->controllerName, $tpl);
         $tpl          = str_replace('{logicName}', $this->logicName, $tpl);

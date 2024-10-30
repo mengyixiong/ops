@@ -6,6 +6,7 @@ import { menuTypeOptions } from '@/constants/business';
 import { fetchAdd, fetchEdit, fetchGetAllMenus } from '@/service/api/system/menu';
 import { fetchGetAllCompanies } from '@/service/api/system/company';
 import { getRoutePathByRouteName } from './shared';
+import IconSelector from './icon-selector.vue';
 
 defineOptions({
   name: 'MenuOperateModal'
@@ -176,10 +177,17 @@ watch(
     handleUpdateI18nKeyByRouteName();
   }
 );
+
+const iconDraw = ref(false);
+function openIconSelector() {
+  console.log('openIconSelector');
+  iconDraw.value = true;
+}
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-800px">
+
+  <NModal v-model:show="visible" :title="title" preset="card" class="w-90%">
     <NScrollbar class="h-480px pr-20px">
       <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="100">
         <NGrid responsive="screen" item-responsive>
@@ -228,7 +236,15 @@ watch(
               <NInput v-model:value="model.component" :placeholder="$t('page.manage.menu.form.component')" />
             </NFormItemGi>
             <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.icon')" path="icon">
-              <NInput v-model:value="model.icon" :placeholder="$t('page.manage.menu.form.icon')" />
+              <IconSelector v-model:visible="iconDraw" v-model:icon="model.icon" />
+              <NInputGroup>
+                <NInput v-model:value="model.icon" :placeholder="$t('page.manage.menu.form.icon')" clearable >
+                  <template #prefix>
+                    <SvgIcon :icon="model.icon" ></SvgIcon>
+                  </template>
+                </NInput>
+                <NButton type="primary" ghost @click="openIconSelector">选择图标</NButton>
+              </NInputGroup>
             </NFormItemGi>
             <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.is_hide_menu')" path="is_hide_menu">
               <NRadioGroup v-model:value="model.is_hide_menu">

@@ -4,8 +4,6 @@ import manage from './zh/manage';
 import finance from './zh/finance';
 import tool from './zh/tool';
 
-
-
 const local: App.I18n.Schema = {
   system: {
     title: 'Ops 管理系统',

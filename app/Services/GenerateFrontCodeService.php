@@ -115,7 +115,7 @@ class GenerateFrontCodeService
         /**
          * page.finance.currency.code
          */
-        $langPrefix = "$this->module.$this->featureName";
+        $langPrefix   = "$this->module.$this->featureName";
         $tableColumns = [];
         foreach ($this->columns as $column) {
             if (in_array($column->COLUMN_NAME, $this->alreadyExcludeFields)) {
@@ -140,7 +140,10 @@ class GenerateFrontCodeService
       key: '$column->COLUMN_NAME',
       title: \$t('page.$langPrefix.{$column->COLUMN_NAME}'),
       align: 'center',
-      minWidth: 80,
+      minWidth: 100,
+      ellipsis: {
+        tooltip: true
+      },
 $enum";
                 $tableColumn    .= "    },";
                 $tableColumns[] = $tableColumn;
@@ -209,9 +212,9 @@ $enum";
 
     public function initSearchForm()
     {
-        $tpl = file_get_contents(public_path('tpl/front/modules/search-form.tpl'));
-        $tpl = str_replace('{featureName}', $this->featureName, $tpl);
-        $tpl = str_replace('{module}', $this->studlyModule, $tpl);
+        $tpl          = file_get_contents(public_path('tpl/front/modules/search-form.tpl'));
+        $tpl          = str_replace('{featureName}', $this->featureName, $tpl);
+        $tpl          = str_replace('{module}', $this->studlyModule, $tpl);
         $featureName  = Str::of($this->featureName)->snake()->replace('_', '-')->toString();
         $generatePath = $this->basePath . 'views/' . $this->path . '/' . $featureName . '/modules/search-form.vue';
 
@@ -257,12 +260,13 @@ $enum";
             }
         }
 
-        $tpl = str_replace('{formColumns}', implode("\n", $formColumns), $tpl);
-        $tpl = str_replace('{validateFields}', implode(" | ", $validateFields), $tpl);
-        $tpl = str_replace('{validateFieldsRule}', implode("\n", $validateFieldsRule), $tpl);
-        $tpl = str_replace('{formItems}', implode("\n", $formItems), $tpl);
+        $tpl          = str_replace('{formColumns}', implode("\n", $formColumns), $tpl);
+        $tpl          = str_replace('{validateFields}', implode(" | ", $validateFields), $tpl);
+        $tpl          = str_replace('{validateFieldsRule}', implode("\n", $validateFieldsRule), $tpl);
+        $tpl          = str_replace('{formItems}', implode("\n", $formItems), $tpl);
         $featureName  = Str::of($this->featureName)->snake()->replace('_', '-')->toString();
         $generatePath = $this->basePath . 'views/' . $this->path . '/' . $featureName . '/modules/operate-drawer.vue';
+        $tpl          = str_replace('{apiFileName}', Str::of($this->featureName)->snake()->toString(), $tpl);
 
         $this->record[] = [
             'type'    => 'operate_drawer',
@@ -300,14 +304,11 @@ $enum";
                 if (in_array($column->COLUMN_NAME, $this->alreadyExcludeFields)) {
                     $tableColumn   = "\t\t$column->COLUMN_NAME: '$column->COLUMN_COMMENT',";
                     $langColumns[] = $tableColumn;
-                    if ($column->IS_NULLABLE == 'NO') {
-                        if ($column->COLUMN_TYPE == 'enum' || str_contains($column->COLUMN_NAME, '_id')) {
-                            $formValidateTips[] = "\t\t\t$column->COLUMN_NAME: '请选择 $column->COLUMN_COMMENT',";
-                        } else {
-                            $formValidateTips[] = "\t\t\t$column->COLUMN_NAME: '请输入 $column->COLUMN_COMMENT',";
-                        }
+                    if ($column->COLUMN_TYPE == 'enum' || str_contains($column->COLUMN_NAME, '_id')) {
+                        $formValidateTips[] = "\t\t\t$column->COLUMN_NAME: '请选择 $column->COLUMN_COMMENT',";
+                    } else {
+                        $formValidateTips[] = "\t\t\t$column->COLUMN_NAME: '请输入 $column->COLUMN_COMMENT',";
                     }
-
                 }
             }
 
@@ -335,14 +336,13 @@ $enum";
      */
     public function initServiceApi()
     {
-        $tpl = file_get_contents(public_path('tpl/front/service_api.tpl'));
-        $featureName  = Str::of($this->featureName)->snake()->toString();
-        $tpl = str_replace('{featureName}', $featureName, $tpl);
-        $tpl = str_replace('{module}', $this->module, $tpl);
-        $tpl = str_replace('{studlyModule}', $this->studlyModule, $tpl);
-        $featureName  = Str::of($this->featureName)->snake()->toString();
-        $generatePath = $this->basePath . "service/api/$this->module/" . $featureName . ".ts";
-
+        $tpl            = file_get_contents(public_path('tpl/front/service_api.tpl'));
+        $featureName    = Str::of($this->featureName)->camel()->toString();
+        $tpl            = str_replace('{featureName}', $featureName, $tpl);
+        $tpl            = str_replace('{module}', $this->module, $tpl);
+        $tpl            = str_replace('{studlyModule}', $this->studlyModule, $tpl);
+        $featureName    = Str::of($this->featureName)->snake()->toString();
+        $generatePath   = $this->basePath . "service/api/$this->module/" . $featureName . ".ts";
         $this->record[] = [
             'type'    => "service_api",
             'path'    => $generatePath,

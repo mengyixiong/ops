@@ -105,6 +105,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         },
         children: [
           {
+            name: 'finance_basic-data_cost-item',
+            path: '/finance/basic-data/cost-item',
+            component: 'view.finance_basic-data_cost-item',
+            meta: {
+              title: 'finance_basic-data_cost-item',
+              i18nKey: 'route.finance_basic-data_cost-item'
+            }
+          },
+          {
             name: 'finance_basic-data_currency',
             path: '/finance/basic-data/currency',
             component: 'view.finance_basic-data_currency',
@@ -220,6 +229,25 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'setting_system_role',
               i18nKey: 'route.setting_system_role'
+            }
+          }
+        ]
+      },
+      {
+        name: 'setting_tool',
+        path: '/setting/tool',
+        meta: {
+          title: 'setting_tool',
+          i18nKey: 'route.setting_tool'
+        },
+        children: [
+          {
+            name: 'setting_tool_generate-record',
+            path: '/setting/tool/generate-record',
+            component: 'view.setting_tool_generate-record',
+            meta: {
+              title: 'setting_tool_generate-record',
+              i18nKey: 'route.setting_tool_generate-record'
             }
           }
         ]

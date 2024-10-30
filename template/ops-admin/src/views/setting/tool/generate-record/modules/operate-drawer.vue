@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, reactive, watch }  from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t }                         from '@/locales';
-import { fetchAdd, fetchEdit }        from '@/service/api/{module}/{apiFileName}';
-import {useTool}                      from "@/hooks/common/tool";
-const {assignMatchingProperties} = useTool()
+import { $t } from '@/locales';
+import { fetchAdd, fetchEdit } from '@/service/api/tool/generate_record';
+import { useTool } from '@/hooks/common/tool';
+const { assignMatchingProperties } = useTool();
 defineOptions({
   name: 'OperateDrawer'
 });
@@ -13,7 +13,7 @@ interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: {studlyModule}.{featureName}.Item | null;
+  rowData?: Tool.GenerateRecord.Item | null;
 }
 
 const props = defineProps<Props>();
@@ -33,27 +33,34 @@ const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: $t('page.{module}.{featureName}.add'),
-    edit: $t('page.{module}.{featureName}.edit')
+    add: $t('page.tool.GenerateRecord.add'),
+    edit: $t('page.tool.GenerateRecord.edit')
   };
   return titles[props.operateType];
 });
 
 // 提交的模型
-type Model = Omit<{studlyModule}.{featureName}.Form, keyof Api.Common.CommonRecord>;
+type Model = Omit<Tool.GenerateRecord.Form, keyof Api.Common.CommonRecord>;
 const model: Model = reactive(createDefaultModel());
 
 /** 创建表单数据 */
 function createDefaultModel(): Model {
   return {
-{formColumns}
+    module: '',
+    path: '',
+    front_path: '',
+    table_name: '',
+    prefix: ''
   };
 }
 
 // 验证规则
-type RuleKey = Extract<keyof Model, {validateFields}>;
+type RuleKey = Extract<keyof Model, 'module' | 'path' | 'front_path' | 'table_name' | 'prefix'>;
 const rules: Record<RuleKey, App.Global.FormRule> = {
-{validateFieldsRule}
+  module: defaultRequiredRule,
+  path: defaultRequiredRule,
+  front_path: defaultRequiredRule,
+  table_name: defaultRequiredRule,
 };
 
 function handleInitModel() {
@@ -97,7 +104,21 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" display-directive="show" :width="360">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-{formItems}
+        <NFormItem :label="$t('page.tool.GenerateRecord.table_name')" path="table_name">
+          <NInput v-model:value="model.table_name" :placeholder="$t('page.tool.GenerateRecord.form.table_name')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.tool.GenerateRecord.module')" path="module">
+          <NInput v-model:value="model.module" :placeholder="$t('page.tool.GenerateRecord.form.module')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.tool.GenerateRecord.path')" path="path">
+          <NInput v-model:value="model.path" :placeholder="$t('page.tool.GenerateRecord.form.path')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.tool.GenerateRecord.front_path')" path="front_path">
+          <NInput v-model:value="model.front_path" :placeholder="$t('page.tool.GenerateRecord.form.front_path')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.tool.GenerateRecord.prefix')" path="prefix">
+          <NInput v-model:value="model.prefix" :placeholder="$t('page.tool.GenerateRecord.form.prefix')" />
+        </NFormItem>
       </NForm>
       <template #footer>
         <NSpace :size="16">

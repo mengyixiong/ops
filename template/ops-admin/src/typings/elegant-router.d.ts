@@ -27,6 +27,7 @@ declare module "@elegant-router/types" {
     "business_orders_sea-import": "/business/orders/sea-import";
     "finance": "/finance";
     "finance_basic-data": "/finance/basic-data";
+    "finance_basic-data_cost-item": "/finance/basic-data/cost-item";
     "finance_basic-data_currency": "/finance/basic-data/currency";
     "finance_basic-data_stream": "/finance/basic-data/stream";
     "finance_basic-data_subject": "/finance/basic-data/subject";
@@ -39,6 +40,8 @@ declare module "@elegant-router/types" {
     "setting_system_company": "/setting/system/company";
     "setting_system_menu": "/setting/system/menu";
     "setting_system_role": "/setting/system/role";
+    "setting_tool": "/setting/tool";
+    "setting_tool_generate-record": "/setting/tool/generate-record";
     "warehouse": "/warehouse";
     "warehouse_data": "/warehouse/data";
     "warehouse_data_material": "/warehouse/data/material";
@@ -112,6 +115,7 @@ declare module "@elegant-router/types" {
     | "login"
     | "business_orders_sea-export"
     | "business_orders_sea-import"
+    | "finance_basic-data_cost-item"
     | "finance_basic-data_currency"
     | "finance_basic-data_stream"
     | "finance_basic-data_subject"
@@ -120,6 +124,7 @@ declare module "@elegant-router/types" {
     | "setting_system_company"
     | "setting_system_menu"
     | "setting_system_role"
+    | "setting_tool_generate-record"
     | "warehouse_data_material"
     | "warehouse_data_warehouse"
     | "warehouse_funds_payment-order"

@@ -24,4 +24,27 @@ declare namespace Finance {
     /** 查询参数 */
     type SearchParams = { keyword: string } & Common.CommonSearchParams;
   }
+
+
+  namespace CostItem {
+    type Item = Common.CommonRecord<{
+	  name: string;
+	  en_name: string;
+	  code: string;
+	  is_enable: string;
+	  remark: string;
+    }>;
+
+    /** 提交的数据 */
+    type Form = Partial<{Item}>;
+
+    /**
+     * 列表数据
+     */
+    type List = Api.Common.PaginatingQueryRecord<{Item}>;
+
+    /** 查询参数 */
+    type SearchParams = { keyword: string } & Common.CommonSearchParams;
+  }
+
 }

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, reactive, watch }  from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t }                         from '@/locales';
-import { fetchAdd, fetchEdit }        from '@/service/api/{module}/{apiFileName}';
-import {useTool}                      from "@/hooks/common/tool";
-const {assignMatchingProperties} = useTool()
+import { $t } from '@/locales';
+import { fetchAdd, fetchEdit } from '@/service/api/finance/cost_item';
+import { useTool } from '@/hooks/common/tool';
+const { assignMatchingProperties } = useTool();
 defineOptions({
   name: 'OperateDrawer'
 });
@@ -13,7 +13,7 @@ interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: {studlyModule}.{featureName}.Item | null;
+  rowData?: Finance.CostItem.Item | null;
 }
 
 const props = defineProps<Props>();
@@ -33,27 +33,33 @@ const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: $t('page.{module}.{featureName}.add'),
-    edit: $t('page.{module}.{featureName}.edit')
+    add: $t('page.finance.CostItem.add'),
+    edit: $t('page.finance.CostItem.edit')
   };
   return titles[props.operateType];
 });
 
 // 提交的模型
-type Model = Omit<{studlyModule}.{featureName}.Form, keyof Api.Common.CommonRecord>;
+type Model = Omit<Finance.CostItem.Form, keyof Api.Common.CommonRecord>;
 const model: Model = reactive(createDefaultModel());
 
 /** 创建表单数据 */
 function createDefaultModel(): Model {
   return {
-{formColumns}
+    name: '',
+    en_name: '',
+    code: '',
+    is_enable: '',
+    remark: ''
   };
 }
 
 // 验证规则
-type RuleKey = Extract<keyof Model, {validateFields}>;
+type RuleKey = Extract<keyof Model, 'name' | 'code' | 'is_enable'>;
 const rules: Record<RuleKey, App.Global.FormRule> = {
-{validateFieldsRule}
+  name: defaultRequiredRule,
+  code: defaultRequiredRule,
+  is_enable: defaultRequiredRule
 };
 
 function handleInitModel() {
@@ -97,7 +103,21 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" display-directive="show" :width="360">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-{formItems}
+        <NFormItem :label="$t('page.finance.CostItem.name')" path="name">
+          <NInput v-model:value="model.name" :placeholder="$t('page.finance.CostItem.form.name')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.finance.CostItem.en_name')" path="en_name">
+          <NInput v-model:value="model.en_name" :placeholder="$t('page.finance.CostItem.form.en_name')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.finance.CostItem.code')" path="code">
+          <NInput v-model:value="model.code" :placeholder="$t('page.finance.CostItem.form.code')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.finance.CostItem.is_enable')" path="is_enable">
+          <NSwitch v-model:value="model.is_enable" checked-value="Y" unchecked-value="N"></NSwitch>
+        </NFormItem>
+        <NFormItem :label="$t('page.finance.CostItem.remark')" path="remark">
+          <NInput v-model:value="model.remark" :placeholder="$t('page.finance.CostItem.form.remark')" />
+        </NFormItem>
       </NForm>
       <template #footer>
         <NSpace :size="16">

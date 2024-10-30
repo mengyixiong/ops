@@ -38,26 +38,26 @@ class {controllerName} extends BaseController
     /**
      * 详情
      */
-    public function show({modelName} $model)
+    public function show({modelName} ${varName})
     {
-        return $this->succData($model);
+        return $this->succData(${varName});
     }
 
     /**
      * 更新
      */
-    public function update(UpdateRequest $request, {modelName} $model)
+    public function update(UpdateRequest $request, {modelName} ${varName})
     {
-        $this->logic->update($request,$model);
+        $this->logic->update($request,${varName});
         return $this->succOk();
     }
 
     /**
      * 删除
      */
-    public function destroy({modelName} $model)
+    public function destroy({modelName} ${varName})
     {
-        $this->logic->delete($model);
+        $this->logic->delete(${varName});
         return $this->succOk();
     }
 }
