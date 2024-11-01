@@ -27,10 +27,10 @@ declare module "@elegant-router/types" {
     "business_orders_sea-import": "/business/orders/sea-import";
     "finance": "/finance";
     "finance_basic-data": "/finance/basic-data";
+    "finance_basic-data_account-subject": "/finance/basic-data/account-subject";
     "finance_basic-data_cost-item": "/finance/basic-data/cost-item";
     "finance_basic-data_currency": "/finance/basic-data/currency";
     "finance_basic-data_stream": "/finance/basic-data/stream";
-    "finance_basic-data_subject": "/finance/basic-data/subject";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
@@ -115,10 +115,10 @@ declare module "@elegant-router/types" {
     | "login"
     | "business_orders_sea-export"
     | "business_orders_sea-import"
+    | "finance_basic-data_account-subject"
     | "finance_basic-data_cost-item"
     | "finance_basic-data_currency"
     | "finance_basic-data_stream"
-    | "finance_basic-data_subject"
     | "home"
     | "setting_system_admin"
     | "setting_system_company"

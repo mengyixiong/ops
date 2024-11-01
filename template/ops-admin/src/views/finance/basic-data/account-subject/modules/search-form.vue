@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
-import { YesOrNoOptions } from '@/constants/business';
-import { translateOptions } from '@/utils/common';
 
 defineOptions({
   name: 'SearchForm'
@@ -10,7 +8,6 @@ defineOptions({
 
 interface Emits {
   (e: 'reset'): void;
-
   (e: 'search'): void;
 }
 
@@ -18,7 +15,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Setting.SystemCompany.SearchParams>('model', { required: true });
+const model = defineModel<Finance.AccountSubject.SearchParams>('model', { required: true });
 
 async function reset() {
   await restoreValidation();
@@ -37,11 +34,8 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.name')" path="name" class="pr-24px">
-              <NInput v-model:value="model.name" :placeholder="$t('page.manage.role.name')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.code')" path="code" class="pr-24px">
-              <NInput v-model:value="model.code" :placeholder="$t('page.manage.role.code')" />
+            <NFormItemGi span="24 s:12 m:6" :label="$t('common.keyword')" path="keyword" class="pr-24px">
+              <NInput v-model:value="model.keyword" :placeholder="$t('common.keywordSearch')" />
             </NFormItemGi>
             <NFormItemGi span="24 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">

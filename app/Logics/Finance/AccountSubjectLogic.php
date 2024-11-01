@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SubjectLogic extends BaseLogic
+class AccountSubjectLogic extends BaseLogic
 {
     private Request $request;
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Finance\AccountSubjectController;
 use App\Http\Controllers\Finance\CostItemController;
 use App\Http\Controllers\Finance\CurrencyController;
 use App\Http\Controllers\Finance\SubjectController;
@@ -75,6 +76,7 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
     ], function () {
         # 会计科目
         Route::apiResource('/subject', SubjectController::class);
+        Route::apiResource('/accountSubject', AccountSubjectController::class);
         # 币种
         Route::apiResource('/currency', CurrencyController::class);
         Route::apiResource('/costItem',CostItemController::class);

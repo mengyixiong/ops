@@ -105,6 +105,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         },
         children: [
           {
+            name: 'finance_basic-data_account-subject',
+            path: '/finance/basic-data/account-subject',
+            component: 'view.finance_basic-data_account-subject',
+            meta: {
+              title: 'finance_basic-data_account-subject',
+              i18nKey: 'route.finance_basic-data_account-subject'
+            }
+          },
+          {
             name: 'finance_basic-data_cost-item',
             path: '/finance/basic-data/cost-item',
             component: 'view.finance_basic-data_cost-item',
@@ -129,15 +138,6 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'finance_basic-data_stream',
               i18nKey: 'route.finance_basic-data_stream'
-            }
-          },
-          {
-            name: 'finance_basic-data_subject',
-            path: '/finance/basic-data/subject',
-            component: 'view.finance_basic-data_subject',
-            meta: {
-              title: 'finance_basic-data_subject',
-              i18nKey: 'route.finance_basic-data_subject'
             }
           }
         ]
