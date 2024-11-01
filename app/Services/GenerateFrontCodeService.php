@@ -253,6 +253,7 @@ $enum";
           <NSwitch v-model:value=\"model.$column->COLUMN_NAME\" checked-value=\"Y\" unchecked-value=\"N\">
           </NSwitch>
         </NFormItem>";
+                    continue;
                 }
                 $formItems[] = "        <NFormItem :label=\"\$t('$langPrefix.$column->COLUMN_NAME')\" path=\"$column->COLUMN_NAME\">
           <NInput v-model:value=\"model.$column->COLUMN_NAME\" :placeholder=\"\$t('$langPrefix.form.$column->COLUMN_NAME')\" />

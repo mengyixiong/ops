@@ -75,7 +75,7 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         'as'     => 'finance.',
     ], function () {
         # 会计科目
-        Route::apiResource('/subject', SubjectController::class);
+        Route::get('/accountSubject/operateInitData', [AccountSubjectController::class,'operateInitData'])->name('accountSubject.operateInitData');
         Route::apiResource('/accountSubject', AccountSubjectController::class);
         # 币种
         Route::apiResource('/currency', CurrencyController::class);

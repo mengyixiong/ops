@@ -81,6 +81,7 @@ export default {
     team_required: '部门必填',
     branch_required: '分公司必填',
     add: '新增会计科目',
+    addChild: '子科目',
     edit: '编辑会计科目',
     delete: '删除会计科目',
     deleteSuccess: '删除会计科目成功',

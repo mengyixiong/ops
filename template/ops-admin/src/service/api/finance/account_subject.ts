@@ -9,6 +9,13 @@ export function fetchGetList(params?: Finance.accountSubject.SearchParams) {
   });
 }
 
+export function fetchGetOperateInitData() {
+  return request<Finance.accountSubject.Item>({
+    url: `/finance/accountSubject/operateInitData`,
+    method: 'get'
+  });
+}
+
 /** add */
 export function fetchAdd(data?: Finance.accountSubject.Item) {
   return request({

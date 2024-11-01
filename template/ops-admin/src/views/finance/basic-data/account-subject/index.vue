@@ -5,11 +5,11 @@ import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { fetchDel, fetchGetList } from '@/service/api/finance/account_subject';
 import { yesOrNoRecord } from '@/constants/common';
+import SvgIcon from '@/components/custom/svg-icon.vue';
 import OperateDrawer from './modules/operate-drawer.vue';
 import SearchForm from './modules/search-form.vue';
 
 const appStore = useAppStore();
-
 const {
   columns,
   columnChecks,
@@ -35,6 +35,33 @@ const {
       width: 48
     },
     {
+      key: 'operate',
+      title: $t('common.operate'),
+      align: 'center',
+      width: 200,
+      render: row => (
+        <div class="flex-center gap-8px">
+          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
+            {$t('common.edit')}
+          </NButton>
+          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+            {{
+              default: () => $t('common.confirmDelete'),
+              trigger: () => (
+                <NButton type="error" ghost size="small">
+                  {$t('common.delete')}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+          <NButton type="primary" ghost size="small" onClick={() => add(row)}>
+            <SvgIcon icon="ep:plus"></SvgIcon>
+            {$t('page.finance.AccountSubject.addChild')}
+          </NButton>
+        </div>
+      )
+    },
+    {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
@@ -47,7 +74,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'level',
@@ -56,19 +83,6 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
-      render: row => {
-        const hide: CommonType.YesOrNo = row.level;
-
-        const tagMap: Record<CommonType.YesOrNo, NaiveUI.ThemeColor> = {
-          Y: 'success',
-          N: 'error'
-        };
-
-        const label = $t(yesOrNoRecord[hide]);
-
-        return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -78,7 +92,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'abb',
@@ -87,7 +101,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'cn_name',
@@ -96,7 +110,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'en_name',
@@ -105,7 +119,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'type',
@@ -114,19 +128,6 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
-      render: row => {
-        const hide: CommonType.YesOrNo = row.type;
-
-        const tagMap: Record<CommonType.YesOrNo, NaiveUI.ThemeColor> = {
-          Y: 'success',
-          N: 'error'
-        };
-
-        const label = $t(yesOrNoRecord[hide]);
-
-        return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -136,19 +137,6 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
-      render: row => {
-        const hide: CommonType.YesOrNo = row.format;
-
-        const tagMap: Record<CommonType.YesOrNo, NaiveUI.ThemeColor> = {
-          Y: 'success',
-          N: 'error'
-        };
-
-        const label = $t(yesOrNoRecord[hide]);
-
-        return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -158,7 +146,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'com_id',
@@ -167,7 +155,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'is_foreign',
@@ -188,7 +176,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -210,7 +197,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -232,7 +218,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -254,7 +239,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -276,7 +260,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -286,7 +269,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'foreign_balance',
@@ -295,7 +278,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'opening_balance',
@@ -304,7 +287,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'opening_foreign_balance',
@@ -313,7 +296,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'year_opening_balance',
@@ -322,7 +305,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'year_opening_foreign_balance',
@@ -331,7 +314,7 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
-      },
+      }
     },
     {
       key: 'vendor_required',
@@ -352,7 +335,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -374,7 +356,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -396,7 +377,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -418,7 +398,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-
       }
     },
     {
@@ -438,42 +417,11 @@ const {
       ellipsis: {
         tooltip: true
       }
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 200,
-      render: row => (
-        <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
     }
   ]
 });
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-} = useTableOperate(data, getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
 
 /** 批量删除 */
 async function handleBatchDelete() {
@@ -489,6 +437,32 @@ async function handleDelete(id: number) {
 
 function edit(id: number) {
   handleEdit(id);
+}
+
+function add(row) {
+  editingData.value = {
+    pid: row.id,
+    level: Number.parseInt(row.level, 10) + 1,
+    code: '1001',
+    abb: '',
+    cn_name: '',
+    en_name: '',
+    type: 'asset',
+    format: 'amount',
+    currency: 'CNY',
+    com_id: 1,
+    is_foreign: 'N',
+    is_dn: 'Y',
+    is_frozen: 'N',
+    is_last: 'N',
+    is_cash: 'Y',
+    vendor_required: 'Y',
+    clerk_required: 'N',
+    team_required: 'N',
+    branch_required: 'Y'
+  };
+  console.log(editingData);
+  handleAdd();
 }
 </script>
 
@@ -530,7 +504,6 @@ function edit(id: number) {
         :row-data="editingData"
         @submitted="getDataByPage"
       />
-
     </NCard>
   </div>
 </template>

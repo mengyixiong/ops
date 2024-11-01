@@ -227,5 +227,4 @@ const local: App.I18n.Schema = {
     itemCount: '共 {total} 条'
   }
 };
-console.log(local)
 export default local;

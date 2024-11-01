@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('code', 32)->comment('级别');
             $table->string('abb', 32)->nullable()->comment('助记码');
             $table->string('cn_name', 32)->comment('中文名称');
-            $table->string('en_name', 32)->nullable()->comment('英文名称');
+            $table->string('en_name', 100)->nullable()->comment('英文名称');
             $table->enum('type', array_keys(FinanceConstant::SUBJECT_TYPE))->comment('科目类型');
             $table->enum('format', array_keys(FinanceConstant::FORMAT))->comment('账页格式');
             $table->string('currency',10)->default('CNY')->comment('核算比重');

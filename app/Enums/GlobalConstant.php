@@ -27,4 +27,16 @@ class GlobalConstant
         }
         return $enums;
     }
+
+    public static function map2Options($map): array
+    {
+        $options = [];
+        foreach ($map as $key => $value) {
+            $options[] = [
+                'label' => $value,
+                'value' => $key,
+            ];
+        }
+        return $options;
+    }
 }

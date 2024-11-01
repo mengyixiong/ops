@@ -63,6 +63,26 @@ return [
             ]) : [],
         ],
 
+        'rq' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('RQ_DB_HOST', '192.168.18.10'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('RQ_DB_DATABASE', 'oa'),
+            'username' => env('RQ_DB_USERNAME', 'oa'),
+            'password' => env('RQ_DB_PASSWORD', 'rqwl888'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

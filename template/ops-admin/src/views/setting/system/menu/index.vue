@@ -3,7 +3,7 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { fetchGetList } from '@/service/api/system/menu';
+import { fetchDel, fetchGetList } from '@/service/api/system/menu';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -11,7 +11,6 @@ import { yesOrNoRecord } from '@/constants/common';
 import { menuTypeRecord } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
-import { fetchDel } from "@/service/api/system/menu";
 
 const appStore = useAppStore();
 const { bool: visible, setTrue: openModal } = useBoolean();
@@ -169,9 +168,7 @@ function handleAdd() {
   openModal();
 }
 
-/**
- * 批量删除
- */
+/** 批量删除 */
 async function handleBatchDelete() {
   onBatchDeleted();
 }
@@ -195,7 +192,6 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
   editingData.value = { ...item };
   openModal();
 }
-
 </script>
 
 <template>
@@ -209,9 +205,7 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
           @add="handleAdd"
           @delete="handleBatchDelete"
           @refresh="getData"
-        >
-
-        </TableHeaderOperation>
+        ></TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
