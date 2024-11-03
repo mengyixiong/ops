@@ -4,7 +4,8 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchAdd, fetchEdit, fetchGetOperateInitData } from '@/service/api/finance/account_subject';
 import { useTool } from '@/hooks/common/tool';
-import { menuTypeOptions } from '@/constants/business';
+import OpsCheckbox from '@/components/common/ops-checkbox.vue';
+
 const { assignMatchingProperties } = useTool();
 defineOptions({
   name: 'OperateDrawer'
@@ -51,34 +52,14 @@ const emit = defineEmits<Emits>();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { defaultRequiredRule } = useFormRules();
 const initData = reactive({});
-const model: Model = reactive(createDefaultModel());
+const model: Model = reactive({});
 const visible = defineModel<boolean>('visible', {
   default: false
 });
 const rules: Record<RuleKey, App.Global.FormRule> = {
   pid: defaultRequiredRule,
-  level: defaultRequiredRule,
   code: defaultRequiredRule,
-  cn_name: defaultRequiredRule,
-  type: defaultRequiredRule,
-  format: defaultRequiredRule,
-  currency: defaultRequiredRule,
-  com_id: defaultRequiredRule,
-  is_foreign: defaultRequiredRule,
-  is_dn: defaultRequiredRule,
-  is_frozen: defaultRequiredRule,
-  is_last: defaultRequiredRule,
-  is_cash: defaultRequiredRule,
-  balance: defaultRequiredRule,
-  foreign_balance: defaultRequiredRule,
-  opening_balance: defaultRequiredRule,
-  opening_foreign_balance: defaultRequiredRule,
-  year_opening_balance: defaultRequiredRule,
-  year_opening_foreign_balance: defaultRequiredRule,
-  vendor_required: defaultRequiredRule,
-  clerk_required: defaultRequiredRule,
-  team_required: defaultRequiredRule,
-  branch_required: defaultRequiredRule
+  cn_name: defaultRequiredRule
 };
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
@@ -88,40 +69,10 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-/** 创建表单数据 */
-function createDefaultModel(): Model {
-  return {
-    pid: '',
-    level: '',
-    code: '',
-    abb: '',
-    cn_name: '',
-    en_name: '',
-    type: '',
-    format: '',
-    currency: '',
-    com_id: '',
-    is_foreign: '',
-    is_dn: '',
-    is_frozen: '',
-    is_last: '',
-    is_cash: '',
-    balance: '',
-    foreign_balance: '',
-    opening_balance: '',
-    opening_foreign_balance: '',
-    year_opening_balance: '',
-    year_opening_foreign_balance: '',
-    vendor_required: '',
-    clerk_required: '',
-    team_required: '',
-    branch_required: ''
-  };
-}
-
 function handleInitModel() {
-  Object.assign(model, createDefaultModel());
-  if (props.operateType === 'edit' && props.rowData) {
+  if (props.operateType === 'add') {
+    Object.assign(model, props.rowData);
+  } else {
     assignMatchingProperties(props.rowData, model);
   }
 }
@@ -162,138 +113,90 @@ watch(visible, async () => {
     restoreValidation();
   }
 });
+
+const btnSize = 'tiny';
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-90%">
+  <NModal v-model:show="visible" :title="title" preset="card" class="w-40%">
     <NScrollbar class="h-480px pr-20px">
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm ref="formRef" label-placement="left" :model="model" :rules="rules" label-width="120">
         <NGrid responsive="screen" item-responsive x-gap="12">
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.level')" path="level">
-            <NInput v-model:value="model.level" :placeholder="$t('page.finance.AccountSubject.form.level')" />
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.type')" path="type">
+            <NGrid :x-gap="12" :cols="3">
+              <NGridItem>
+                <NButton type="info" :size="btnSize">
+                  {{ initData.typeMap?.[model.type] }}
+                </NButton>
+              </NGridItem>
+              <NGridItem>
+                <NButton type="success" :size="btnSize">{{ model.level }} 级</NButton>
+              </NGridItem>
+              <NGridItem>
+                <OpsCheckbox v-model:checked="model.is_frozen">
+                  {{ $t('page.finance.AccountSubject.is_frozen') }}
+                </OpsCheckbox>
+              </NGridItem>
+            </NGrid>
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.code')" path="code">
+
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.is_dn')" path="is_dn">
+            <NButton :size="btnSize" :type="model.is_dn == 'Y' ? 'success' : 'error'">
+              {{ model.is_dn == 'Y' ? '借方' : '贷方' }}
+            </NButton>
+          </NFormItemGi>
+
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.code')" path="code">
             <NInput v-model:value="model.code" :placeholder="$t('page.finance.AccountSubject.form.code')" />
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.abb')" path="abb">
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.abb')" path="abb">
             <NInput v-model:value="model.abb" :placeholder="$t('page.finance.AccountSubject.form.abb')" />
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.cn_name')" path="cn_name">
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.cn_name')" path="cn_name">
             <NInput v-model:value="model.cn_name" :placeholder="$t('page.finance.AccountSubject.form.cn_name')" />
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.en_name')" path="en_name">
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.en_name')" path="en_name">
             <NInput v-model:value="model.en_name" :placeholder="$t('page.finance.AccountSubject.form.en_name')" />
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.type')" path="type">
-            <NInput v-model:value="model.type" :placeholder="$t('page.finance.AccountSubject.form.type')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.format')" path="format">
-            <NInput v-model:value="model.format" :placeholder="$t('page.finance.AccountSubject.form.format')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.currency')" path="currency">
-            <NInput v-model:value="model.currency" :placeholder="$t('page.finance.AccountSubject.form.currency')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.com_id')" path="com_id">
-            <NInput v-model:value="model.com_id" :placeholder="$t('page.finance.AccountSubject.form.com_id')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_foreign')" path="is_foreign">
-            <NSwitch v-model:value="model.is_foreign" checked-value="Y" unchecked-value="N"></NSwitch>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_foreign')" path="is_foreign">
-            <NInput v-model:value="model.is_foreign" :placeholder="$t('page.finance.AccountSubject.form.is_foreign')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_dn')" path="is_dn">
-            <NSwitch v-model:value="model.is_dn" checked-value="Y" unchecked-value="N"></NSwitch>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_dn')" path="is_dn">
-            <NInput v-model:value="model.is_dn" :placeholder="$t('page.finance.AccountSubject.form.is_dn')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_frozen')" path="is_frozen">
-            <NSwitch v-model:value="model.is_frozen" checked-value="Y" unchecked-value="N"></NSwitch>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_frozen')" path="is_frozen">
-            <NInput v-model:value="model.is_frozen" :placeholder="$t('page.finance.AccountSubject.form.is_frozen')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_last')" path="is_last">
-            <NSwitch v-model:value="model.is_last" checked-value="Y" unchecked-value="N"></NSwitch>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_last')" path="is_last">
-            <NInput v-model:value="model.is_last" :placeholder="$t('page.finance.AccountSubject.form.is_last')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_cash')" path="is_cash">
-            <NSwitch v-model:value="model.is_cash" checked-value="Y" unchecked-value="N"></NSwitch>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.is_cash')" path="is_cash">
-            <NInput v-model:value="model.is_cash" :placeholder="$t('page.finance.AccountSubject.form.is_cash')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.balance')" path="balance">
-            <NInput v-model:value="model.balance" :placeholder="$t('page.finance.AccountSubject.form.balance')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.foreign_balance')" path="foreign_balance">
-            <NInput
-              v-model:value="model.foreign_balance"
-              :placeholder="$t('page.finance.AccountSubject.form.foreign_balance')"
+
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.currency')" path="currency">
+            <template #label>
+              <OpsCheckbox v-model:checked="model.is_foreign">
+                {{ $t('page.finance.AccountSubject.is_foreign') }}
+              </OpsCheckbox>
+            </template>
+            <NSelect
+              v-model:value="model.currency"
+              :disabled="model.is_foreign == 'N'"
+              :placeholder="$t('page.finance.AccountSubject.form.currency')"
+              :options="initData?.currencyOptions"
+              filterable
+              clearable
             />
           </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.opening_balance')" path="opening_balance">
-            <NInput
-              v-model:value="model.opening_balance"
-              :placeholder="$t('page.finance.AccountSubject.form.opening_balance')"
-            />
-          </NFormItemGi>
-          <NFormItemGi
-            span="24 m:12"
-            :label="$t('page.finance.AccountSubject.opening_foreign_balance')"
-            path="opening_foreign_balance"
-          >
-            <NInput
-              v-model:value="model.opening_foreign_balance"
-              :placeholder="$t('page.finance.AccountSubject.form.opening_foreign_balance')"
-            />
-          </NFormItemGi>
-          <NFormItemGi
-            span="24 m:12"
-            :label="$t('page.finance.AccountSubject.year_opening_balance')"
-            path="year_opening_balance"
-          >
-            <NInput
-              v-model:value="model.year_opening_balance"
-              :placeholder="$t('page.finance.AccountSubject.form.year_opening_balance')"
-            />
-          </NFormItemGi>
-          <NFormItemGi
-            span="24 m:12"
-            :label="$t('page.finance.AccountSubject.year_opening_foreign_balance')"
-            path="year_opening_foreign_balance"
-          >
-            <NInput
-              v-model:value="model.year_opening_foreign_balance"
-              :placeholder="$t('page.finance.AccountSubject.form.year_opening_foreign_balance')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.vendor_required')" path="vendor_required">
-            <NInput
-              v-model:value="model.vendor_required"
-              :placeholder="$t('page.finance.AccountSubject.form.vendor_required')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.clerk_required')" path="clerk_required">
-            <NInput
-              v-model:value="model.clerk_required"
-              :placeholder="$t('page.finance.AccountSubject.form.clerk_required')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.team_required')" path="team_required">
-            <NInput
-              v-model:value="model.team_required"
-              :placeholder="$t('page.finance.AccountSubject.form.team_required')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.finance.AccountSubject.branch_required')" path="branch_required">
-            <NInput
-              v-model:value="model.branch_required"
-              :placeholder="$t('page.finance.AccountSubject.form.branch_required')"
-            />
+          <NFormItemGi span="24" :label="$t('page.finance.AccountSubject.ancillary_accounting')">
+            <NGrid :cols="4">
+              <NGridItem>
+                <OpsCheckbox v-model:checked="model.vendor_required">
+                  {{ $t('page.finance.AccountSubject.vendor_required') }}
+                </OpsCheckbox>
+              </NGridItem>
+              <NGridItem>
+                <OpsCheckbox v-model:checked="model.clerk_required">
+                  {{ $t('page.finance.AccountSubject.clerk_required') }}
+                </OpsCheckbox>
+              </NGridItem>
+              <NGridItem>
+                <OpsCheckbox v-model:checked="model.team_required">
+                  {{ $t('page.finance.AccountSubject.team_required') }}
+                </OpsCheckbox>
+              </NGridItem>
+              <NGridItem>
+                <OpsCheckbox v-model:checked="model.branch_required">
+                  {{ $t('page.finance.AccountSubject.branch_required') }}
+                </OpsCheckbox>
+              </NGridItem>
+            </NGrid>
           </NFormItemGi>
         </NGrid>
       </NForm>

@@ -1,14 +1,15 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { $t } from '@/locales';
+import { onMounted, reactive }  from 'vue';
+import { $t }                   from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import { fetchDel, fetchGetList } from '@/service/api/finance/account_subject';
+import { fetchDel, fetchGetList, fetchGetOperateInitData } from '@/service/api/finance/account_subject';
 import { yesOrNoRecord } from '@/constants/common';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import OperateDrawer from './modules/operate-drawer.vue';
 import SearchForm from './modules/search-form.vue';
-
+const initData = reactive({});
 const appStore = useAppStore();
 const {
   columns,
@@ -68,21 +69,15 @@ const {
       width: 64
     },
     {
-      key: 'pid',
-      title: $t('page.finance.AccountSubject.pid'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
       key: 'level',
       title: $t('page.finance.AccountSubject.level'),
       align: 'center',
       minWidth: 100,
       ellipsis: {
         tooltip: true
+      },
+      render: row => {
+        return <NTag type="success">{initData?.levelMap?.[row.level]}</NTag>;
       }
     },
     {
@@ -128,6 +123,9 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
+      },
+      render: row => {
+        return <span>{initData?.typeMap?.[row.type]}</span>;
       }
     },
     {
@@ -137,20 +135,14 @@ const {
       minWidth: 100,
       ellipsis: {
         tooltip: true
+      },
+      render: row => {
+        return <span>{initData?.formatMap?.[row.format]}</span>;
       }
     },
     {
       key: 'currency',
       title: $t('page.finance.AccountSubject.currency'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'com_id',
-      title: $t('page.finance.AccountSubject.com_id'),
       align: 'center',
       minWidth: 100,
       ellipsis: {
@@ -260,60 +252,6 @@ const {
         const label = $t(yesOrNoRecord[hide]);
 
         return <NTag type={tagMap[hide]}>{label}</NTag>;
-      }
-    },
-    {
-      key: 'balance',
-      title: $t('page.finance.AccountSubject.balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'foreign_balance',
-      title: $t('page.finance.AccountSubject.foreign_balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'opening_balance',
-      title: $t('page.finance.AccountSubject.opening_balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'opening_foreign_balance',
-      title: $t('page.finance.AccountSubject.opening_foreign_balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'year_opening_balance',
-      title: $t('page.finance.AccountSubject.year_opening_balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'year_opening_foreign_balance',
-      title: $t('page.finance.AccountSubject.year_opening_foreign_balance'),
-      align: 'center',
-      minWidth: 100,
-      ellipsis: {
-        tooltip: true
       }
     },
     {
@@ -439,30 +377,33 @@ function edit(id: number) {
   handleEdit(id);
 }
 
+onMounted(async () => {
+  await getOperateInitData();
+});
+
 function add(row) {
   editingData.value = {
     pid: row.id,
     level: Number.parseInt(row.level, 10) + 1,
-    code: '1001',
+    code: row.code,
     abb: '',
     cn_name: '',
     en_name: '',
-    type: 'asset',
-    format: 'amount',
-    currency: 'CNY',
-    com_id: 1,
-    is_foreign: 'N',
-    is_dn: 'Y',
-    is_frozen: 'N',
-    is_last: 'N',
-    is_cash: 'Y',
-    vendor_required: 'Y',
-    clerk_required: 'N',
-    team_required: 'N',
-    branch_required: 'Y'
+    type: row.type,
+    format: row.format,
+    is_dn: row.is_dn,
+    vendor_required: row.vendor_required,
+    clerk_required: row.clerk_required,
+    team_required: row.team_required,
+    branch_required: row.branch_required
   };
-  console.log(editingData);
   handleAdd();
+}
+async function getOperateInitData() {
+  const { data, error } = await fetchGetOperateInitData();
+  if (!error) {
+    Object.assign(initData, data);
+  }
 }
 </script>
 
@@ -483,7 +424,11 @@ function add(row) {
           @add="handleAdd"
           @delete="handleBatchDelete"
           @refresh="getData"
-        />
+        >
+          <template #default>
+            <div></div>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
@@ -491,7 +436,7 @@ function add(row) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="800"
+        :scroll-x="2000"
         :loading="loading"
         remote
         :row-key="row => row.id"

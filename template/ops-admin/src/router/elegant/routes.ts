@@ -132,12 +132,40 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           },
           {
+            name: 'finance_basic-data_currency-rate',
+            path: '/finance/basic-data/currency-rate',
+            component: 'view.finance_basic-data_currency-rate',
+            meta: {
+              title: 'finance_basic-data_currency-rate',
+              i18nKey: 'route.finance_basic-data_currency-rate'
+            }
+          },
+          {
             name: 'finance_basic-data_stream',
             path: '/finance/basic-data/stream',
             component: 'view.finance_basic-data_stream',
             meta: {
               title: 'finance_basic-data_stream',
               i18nKey: 'route.finance_basic-data_stream'
+            }
+          }
+        ]
+      },
+      {
+        name: 'finance_bookkeeping-manage',
+        path: '/finance/bookkeeping-manage',
+        meta: {
+          title: 'finance_bookkeeping-manage',
+          i18nKey: 'route.finance_bookkeeping-manage'
+        },
+        children: [
+          {
+            name: 'finance_bookkeeping-manage_voucher',
+            path: '/finance/bookkeeping-manage/voucher',
+            component: 'view.finance_bookkeeping-manage_voucher',
+            meta: {
+              title: 'finance_bookkeeping-manage_voucher',
+              i18nKey: 'route.finance_bookkeeping-manage_voucher'
             }
           }
         ]

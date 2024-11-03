@@ -23,7 +23,7 @@ class SubjectCode implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $level = request()->input('level');
-        $subject = request()->route('subject');
+        $subject = request()->route('accountSubject');
 
         if (empty($level)) {
             $fail('请选择科目级别');

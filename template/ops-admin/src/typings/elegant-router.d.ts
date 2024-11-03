@@ -30,7 +30,10 @@ declare module "@elegant-router/types" {
     "finance_basic-data_account-subject": "/finance/basic-data/account-subject";
     "finance_basic-data_cost-item": "/finance/basic-data/cost-item";
     "finance_basic-data_currency": "/finance/basic-data/currency";
+    "finance_basic-data_currency-rate": "/finance/basic-data/currency-rate";
     "finance_basic-data_stream": "/finance/basic-data/stream";
+    "finance_bookkeeping-manage": "/finance/bookkeeping-manage";
+    "finance_bookkeeping-manage_voucher": "/finance/bookkeeping-manage/voucher";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
@@ -117,8 +120,10 @@ declare module "@elegant-router/types" {
     | "business_orders_sea-import"
     | "finance_basic-data_account-subject"
     | "finance_basic-data_cost-item"
+    | "finance_basic-data_currency-rate"
     | "finance_basic-data_currency"
     | "finance_basic-data_stream"
+    | "finance_bookkeeping-manage_voucher"
     | "home"
     | "setting_system_admin"
     | "setting_system_company"

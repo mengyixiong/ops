@@ -4,7 +4,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Finance\AccountSubjectController;
 use App\Http\Controllers\Finance\CostItemController;
 use App\Http\Controllers\Finance\CurrencyController;
+use App\Http\Controllers\Finance\CurrencyRateController;
+use App\Http\Controllers\Finance\PublicController;
 use App\Http\Controllers\Finance\SubjectController;
+use App\Http\Controllers\Finance\VoucherController;
 use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\System\CompanyController;
 use App\Http\Controllers\System\MenuController;
@@ -42,6 +45,9 @@ Route::group([
     Route::post('/upload_avatar', [UploadController::class, 'uploadAvatar'])->name('upload_avatar');
 });
 
+# 公共控制器
+Route::get('/finance/public/getInitData', [PublicController::class, 'getInitData'])->name('finance.public.getInitData');
+
 # 需要认证的路由
 Route::middleware(['auth:sanctum', 'permission'])->group(function () {
 
@@ -74,12 +80,19 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         'prefix' => 'finance',
         'as'     => 'finance.',
     ], function () {
+
         # 会计科目
         Route::get('/accountSubject/operateInitData', [AccountSubjectController::class,'operateInitData'])->name('accountSubject.operateInitData');
         Route::apiResource('/accountSubject', AccountSubjectController::class);
         # 币种
         Route::apiResource('/currency', CurrencyController::class);
+        # 费用项目
         Route::apiResource('/costItem',CostItemController::class);
+        # 汇率管理
+        Route::get('/currencyRate/initData', [CurrencyRateController::class,'initData'])->name('accountSubject.initData');
+        Route::apiResource('/currencyRate', CurrencyRateController::class);
+        # 凭证管理
+        Route::apiResource('/voucher', VoucherController::class);
     });
 
     # 工具模块

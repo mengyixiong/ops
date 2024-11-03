@@ -30,11 +30,29 @@ class FinanceConstant
         self::CURRENCY_AMOUNT => '外币式金额',
     ];
 
-    CONST LEVEL = [
+    const LEVEL = [
         GlobalConstant::ONE => '1 级',
         GlobalConstant::TWO => '2 级',
         GlobalConstant::THREE => '3 级',
         GlobalConstant::FOUR => '4 级',
         GlobalConstant::FIVE => '5 级',
+    ];
+
+    const SETTLEMENT_RATE = 'settlement';
+    const SELL_RATE = 'sell';
+    const BUY_RATE = 'buy';
+
+    Const RATE_TYPE = [
+        self::SETTLEMENT_RATE => '结算汇率',
+        self::SELL_RATE => '卖出汇率',
+        self::BUY_RATE => '买入汇率',
+    ];
+
+    const SYSTEM_VOUCHER = 'system';
+    const MANUAL_VOUCHER = 'manual';
+
+    const VOUCHER_TYPE = [
+        self::SYSTEM_VOUCHER => '系统凭证',
+        self::MANUAL_VOUCHER => '手工凭证',
     ];
 }

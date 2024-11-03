@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('pid')->default(GlobalConstant::ZERO)->comment('上一级，顶级为0');
             $table->enum('level',array_keys(FinanceConstant::LEVEL))->default(GlobalConstant::ONE)->comment('级别');
-            $table->string('code', 32)->comment('级别');
+            $table->string('code', 32)->comment('代码');
             $table->string('abb', 32)->nullable()->comment('助记码');
             $table->string('cn_name', 32)->comment('中文名称');
             $table->string('en_name', 100)->nullable()->comment('英文名称');

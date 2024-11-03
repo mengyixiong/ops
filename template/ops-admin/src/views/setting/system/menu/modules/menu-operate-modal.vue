@@ -180,14 +180,13 @@ watch(
 
 const iconDraw = ref(false);
 function openIconSelector() {
-  console.log('openIconSelector');
   iconDraw.value = true;
 }
 </script>
 
 <template>
 
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-90%">
+  <NModal v-model:show="visible" :title="title" preset="card" class="w-60%">
     <NScrollbar class="h-480px pr-20px">
       <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="100">
         <NGrid responsive="screen" item-responsive>
