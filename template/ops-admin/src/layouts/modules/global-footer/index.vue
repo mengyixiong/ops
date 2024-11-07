@@ -12,11 +12,11 @@ function toggleFlash() {
 </script>
 
 <template>
-  <DarkModeContainer class="h-full">
-    <div >
+  <DarkModeContainer class="h-full flex">
+    <div :class="{ 'icon-flash': isFlashing }">
       <SvgIcon
         icon="ant-design:wechat-filled"
-        :class="isFlashing ? 'icon-flash' : ''"
+
         class="font-size-20px color-sky-400"
       ></SvgIcon>
     </div>
