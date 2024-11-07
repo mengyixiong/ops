@@ -76,6 +76,10 @@ function createDetailModel(): Finance.Voucher.Detail {
     foreign: '',
     dn: '',
     cn: '',
+    vendor: '',
+    clerk: '',
+    team: '',
+    branch: '',
     showPlus: false
   };
 }
@@ -169,75 +173,8 @@ function minus(index) {
 </script>
 
 <template>
-  <!--  <NDrawer v-model:show="visible" display-directive="show" :width="360">-->
-  <!--    <NDrawerContent :title="title" :native-scrollbar="false" closable>-->
-  <!--      <NForm ref="formRef" :model="model" :rules="rules">-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.com_id')" path="com_id">-->
-  <!--          <NInput v-model:value="model.com_id" :placeholder="$t('page.finance.Voucher.form.com_id')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.voucher_num')" path="voucher_num">-->
-  <!--          <NInput v-model:value="model.voucher_num" :placeholder="$t('page.finance.Voucher.form.voucher_num')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.billing_date')" path="billing_date">-->
-  <!--          <NInput v-model:value="model.billing_date" :placeholder="$t('page.finance.Voucher.form.billing_date')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.bookkeeper')" path="bookkeeper">-->
-  <!--          <NInput v-model:value="model.bookkeeper" :placeholder="$t('page.finance.Voucher.form.bookkeeper')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.auditor')" path="auditor">-->
-  <!--          <NInput v-model:value="model.auditor" :placeholder="$t('page.finance.Voucher.form.auditor')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.audit_at')" path="audit_at">-->
-  <!--          <NInput v-model:value="model.audit_at" :placeholder="$t('page.finance.Voucher.form.audit_at')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.cashier')" path="cashier">-->
-  <!--          <NInput v-model:value="model.cashier" :placeholder="$t('page.finance.Voucher.form.cashier')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.make_people')" path="make_people">-->
-  <!--          <NInput v-model:value="model.make_people" :placeholder="$t('page.finance.Voucher.form.make_people')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.make_at')" path="make_at">-->
-  <!--          <NInput v-model:value="model.make_at" :placeholder="$t('page.finance.Voucher.form.make_at')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.dn_total')" path="dn_total">-->
-  <!--          <NInput v-model:value="model.dn_total" :placeholder="$t('page.finance.Voucher.form.dn_total')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.cn_total')" path="cn_total">-->
-  <!--          <NInput v-model:value="model.cn_total" :placeholder="$t('page.finance.Voucher.form.cn_total')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.is_effective')" path="is_effective">-->
-  <!--          <NSwitch v-model:value="model.is_effective" checked-value="Y" unchecked-value="N">-->
-  <!--          </NSwitch>-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.is_audit')" path="is_audit">-->
-  <!--          <NSwitch v-model:value="model.is_audit" checked-value="Y" unchecked-value="N">-->
-  <!--          </NSwitch>-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.is_foreign')" path="is_foreign">-->
-  <!--          <NSwitch v-model:value="model.is_foreign" checked-value="Y" unchecked-value="N">-->
-  <!--          </NSwitch>-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.is_recorded')" path="is_recorded">-->
-  <!--          <NSwitch v-model:value="model.is_recorded" checked-value="Y" unchecked-value="N">-->
-  <!--          </NSwitch>-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.type')" path="type">-->
-  <!--          <NInput v-model:value="model.type" :placeholder="$t('page.finance.Voucher.form.type')" />-->
-  <!--        </NFormItem>-->
-  <!--        <NFormItem :label="$t('page.finance.Voucher.remarks')" path="remarks">-->
-  <!--          <NInput v-model:value="model.remarks" :placeholder="$t('page.finance.Voucher.form.remarks')" />-->
-  <!--        </NFormItem>-->
-  <!--      </NForm>-->
-  <!--      <template #footer>-->
-  <!--        <NSpace :size="16">-->
-  <!--          <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>-->
-  <!--          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>-->
-  <!--        </NSpace>-->
-  <!--      </template>-->
-  <!--    </NDrawerContent>-->
-  <!--  </NDrawer>-->
-  <NModal v-model:show="visible" :title="title" preset="card" class="h-90vh w-70%">
-    <NScrollbar class="h-1000px pr-20px">
+  <NModal v-model:show="visible" :title="title" preset="card" class="w-90%">
+    <NScrollbar class="h-70vh pr-20px">
       <NFlex justify="end">
         <OpsCheckbox v-model:checked="model.is_audit">
           {{ $t('page.finance.Voucher.is_audit') }}
@@ -254,23 +191,19 @@ function minus(index) {
       <NFlex justify="space-between" class="mb-10px pl-25px">
         <NFlex>
           <div class="h-30px flex line-height-30px">
-            <div class="h-30px w-80px">凭证号码:</div>
-            <NDatePicker
-              v-model:formatted-value="model.billing_date"
-              size="small"
-              value-format="yyyy-MM-dd"
-              type="date"
-              :placeholder="$t('page.finance.CurrencyRate.form.effective_date')"
-            />
+            <div class="h-30px w-80px">凭证号码</div>
+            <NInput v-model:value="model.voucherNum" placeholder="" size="small" :bordered="false" />
           </div>
+
           <div class="h-30px flex line-height-30px">
-            <div class="h-30px w-80px">记账日期:</div>
+            <div class="h-30px w-80px">记账日期</div>
             <NDatePicker
               v-model:formatted-value="model.billing_date"
+              :bordered="false"
               size="small"
               value-format="yyyy-MM-dd"
               type="date"
-              :placeholder="$t('page.finance.CurrencyRate.form.effective_date')"
+              :placeholder="$t('page.finance.Voucher.form.billing_date')"
             />
           </div>
         </NFlex>
@@ -291,6 +224,10 @@ function minus(index) {
               <th>外币</th>
               <th>借方金额</th>
               <th>贷方金额</th>
+              <th>往来单位</th>
+              <th>分公司</th>
+              <th>部门</th>
+              <th>员工</th>
             </tr>
           </thead>
           <tbody>
@@ -322,6 +259,18 @@ function minus(index) {
               <td>
                 <NInput v-model:value="item.cn" :bordered="false" placeholder="" />
               </td>
+              <td>
+                <NInput v-model:value="item.vendor" :bordered="false" placeholder="" />
+              </td>
+              <td>
+                <NInput v-model:value="item.clerk" :bordered="false" placeholder="" />
+              </td>
+              <td>
+                <NInput v-model:value="item.team" :bordered="false" placeholder="" />
+              </td>
+              <td>
+                <NInput v-model:value="item.branch" :bordered="false" placeholder="" />
+              </td>
             </tr>
           </tbody>
           <tfoot>
@@ -330,6 +279,10 @@ function minus(index) {
               <td colspan="2" style="padding-left: 12px">合计：</td>
               <td></td>
               <td></td>
+              <td ></td>
+              <td style="padding-right: 12px"></td>
+              <td style="padding-right: 12px"></td>
+              <td style="padding-right: 12px"></td>
               <td style="padding-right: 12px"></td>
             </tr>
           </tfoot>
@@ -415,5 +368,11 @@ function minus(index) {
 }
 .voucher-table td {
   padding: 8px 0;
+}
+
+.voucher-table th:first-child,
+.voucher-table td:first-child {
+  width: 25px;
+  padding: 0;
 }
 </style>
