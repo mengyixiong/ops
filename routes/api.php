@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Finance\AccountSubjectController;
 use App\Http\Controllers\Finance\CostItemController;
 use App\Http\Controllers\Finance\CurrencyController;
@@ -101,6 +102,14 @@ Route::middleware(['auth:sanctum', 'permission'])->group(function () {
         'as'     => 'tool.',
     ], function () {
         Route::apiResource('/generateRecord', GenerateRecordController::class);
+    });
+
+    # 工具模块
+    Route::group([
+        'prefix' => 'chat',
+        'as'     => 'chat.',
+    ], function () {
+        Route::post('/send', [ChatController::class,'send']);
     });
 });
 

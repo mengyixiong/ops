@@ -31,6 +31,12 @@ class UpdateDatabase extends Command
         Artisan::call('migrate:refresh');
         $this->line(Artisan::output());  // 输出迁移的结果
 
+        # 数据库信息
+        $database = config('database.connections.mysql.database');
+        $username = config('database.connections.mysql.username');
+        $password = config('database.connections.mysql.password');
+        $host     = config('database.connections.mysql.host');
+
         # Step 2: 还原数据
         # 获取最新的备份
         $backupDir        = storage_path('backups');
@@ -40,7 +46,8 @@ class UpdateDatabase extends Command
         foreach ($backupFiles as $file) {
             $filePath = $backupDir . '/' . $file;
             if (is_file($filePath)) {
-                $fileTime = filemtime($filePath);
+                $fileName = pathinfo($file, PATHINFO_FILENAME);
+                $fileTime = strtotime(str_replace(["{$database}_","_"],'',$fileName));
                 if ($fileTime > $latestBackupTime) {
                     $latestBackup     = $filePath;
                     $latestBackupTime = $fileTime;
@@ -51,12 +58,6 @@ class UpdateDatabase extends Command
             $this->error('没有找到备份文件');
             return;
         }
-
-        # 数据库信息
-        $database = config('database.connections.mysql.database');
-        $username = config('database.connections.mysql.username');
-        $password = config('database.connections.mysql.password');
-        $host     = config('database.connections.mysql.host');
 
         # 执行还原数据库
         $this->info('开始还原数据库');
