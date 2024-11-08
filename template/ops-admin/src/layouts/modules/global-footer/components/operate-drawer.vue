@@ -155,7 +155,7 @@ watch(visible, async () => {});
                 ></NInput>
               </div>
               <div class="h-4vh">
-                <div style="float: right" class="pr-10px pt-8px">
+                <div style="float: right">
                   <NButton size="small" strong secondary type="success" :loading="loading" @click="send">
                     发 送(S)
                   </NButton>
